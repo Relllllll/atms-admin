@@ -69,7 +69,6 @@ const Register = () => {
                     placeholder="Middle Name"
                     value={formData.middleName}
                     onChange={handleInputChange}
-                    required
                 />
             </div>
             <div className="register__input-wrapper">
