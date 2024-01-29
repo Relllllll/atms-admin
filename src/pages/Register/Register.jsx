@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { getDatabase, ref, set } from "firebase/database";
+import { getDatabase, ref, push, set } from "firebase/database";
 import { auth } from "../../firebase";
 import "./Register.css";
 
@@ -34,7 +34,8 @@ const Register = () => {
 
         try {
             const database = getDatabase();
-            const newEmployeeRef = ref(database, "employees/");
+            const newEmployeeKey = push(ref(database, "employees")).key;
+            const newEmployeeRef = ref(database, `employees/${newEmployeeKey}`);
 
             await set(newEmployeeRef, formData);
 
