@@ -1,0 +1,68 @@
+.login {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: url(/public/pinagbgcopy.jpg);
+    background-size: cover;
+}
+
+.login-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+}
+
+.login__title-wrapper {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.login__title {
+    color: #faf9f6;
+}
+
+.login__wrapper {
+    border: 7px solid #f7b137;
+    padding: 1rem;
+}
+
+.login__lower-header {
+    color: #faf9f6;
+}
+
+.login__upper-text {
+    color: #faf9f6;
+}
+
+.login__mustard-text {
+    font-weight: bold;
+    color: #f7b137;
+}
+
+.login__form-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.login__form-input-wrapper {
+    display: flex;
+    background-color: #faf9f6;
+}
+
+.login__form-input-icon {
+    width: 2rem;
+    height: 2rem;
+}
+
+.login__form-input-wrapper input {
+    background: none;
+    border: none;
+}
+
+.login__button {
+    background-color: #f7b137;
+    padding: 0.4rem;
+}
