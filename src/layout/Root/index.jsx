@@ -1,10 +1,14 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Sidebar from "../../components/Sidebar/Sidebar";
 
 const Root = () => {
+    const location = useLocation();
+
+    const shouldRenderSidebar = location.pathname !== "/";
+
     return (
         <div className="page-wrapper">
-            <Sidebar />
+            {shouldRenderSidebar && <Sidebar />}
             <Outlet />
         </div>
     );
