@@ -21,3 +21,34 @@
     border: none;
     background: none;
 }
+
+.employee__title{
+    color: var(--clr-dark-blue);
+}
+
+.employee__list{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 0.3rem;
+}
+
+.employee__upperTable{
+    border: 1rem solid var(--clr-light-gray);
+    background-color: var(--clr-light-gray);
+    color: var(--clr-gray);
+    border-radius: 1rem;
+    font-weight: 600;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.employee__lowerTable{
+    border: 1rem solid var(--clr-light-gray);
+    background-color: var(--clr-light-gray);
+    border-radius: 1rem;
+    display: flex;
+    justify-content: space-between;
+}
