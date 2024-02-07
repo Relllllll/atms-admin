@@ -30,7 +30,7 @@ const Employee = () => {
         );
     }, []); // Empty dependency array to run only once
     return (
-        <div>
+        <div className="main">
             <h1>Employee</h1>
             <ul>
                 {Object.values(employees).map((employee) => (
