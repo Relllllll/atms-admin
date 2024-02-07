@@ -18,6 +18,7 @@ const Employee = () => {
     const [user] = useAuthState(auth);
     const navigate = useNavigate();
 
+
     useEffect(() => {
         if (!user) {
             navigate("/");
@@ -91,6 +92,34 @@ const Employee = () => {
                         </li>
                     ))}
                 </ul>
+            </div>
+            <hr/>
+            <h1 className="employee__title">Full Employee Details</h1>
+            <div className="employee__tables">
+                <div className="employee__list">
+                    <div className="employee__upperTable">
+                        <p>No.</p>
+                        <p>Name</p>
+                        <p>Contacts</p>
+                        <p>Status Today</p>
+                    </div>
+
+                    <div className="employee__lowerTable">
+                        <ul>
+                            {Object.values(employees).map((employee) => (
+                                <li key={employee.key}>
+                                    <p>
+                                        Name: {employee.firstName} {employee.middleName}{" "}
+                                {employee.lastName}
+                                    </p>
+                                    <p>Contact Number: {employee.contactNum}</p>
+                                <p>Address: {employee.address}</p>
+                                    <p>Age: {employee.age}</p>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     );
