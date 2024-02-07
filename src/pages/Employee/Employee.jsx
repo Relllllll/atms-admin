@@ -18,7 +18,6 @@ const Employee = () => {
     const [user] = useAuthState(auth);
     const navigate = useNavigate();
 
-
     useEffect(() => {
         if (!user) {
             navigate("/");
@@ -77,23 +76,6 @@ const Employee = () => {
                 />
             </div>
             <hr />
-            <div className="employee__list">
-                <h1>Full Employee Details</h1>
-                <ul>
-                    {searchEmployees.map((employee) => (
-                        <li key={employee.key}>
-                            <p>
-                                Name: {employee.firstName} {employee.middleName}{" "}
-                                {employee.lastName}
-                            </p>
-                            <p>Contact Number: {employee.contactNum}</p>
-                            <p>Address: {employee.address}</p>
-                            <p>Age: {employee.age}</p>
-                        </li>
-                    ))}
-                </ul>
-            </div>
-            <hr/>
             <h1 className="employee__title">Full Employee Details</h1>
             <div className="employee__tables">
                 <div className="employee__list">
@@ -105,16 +87,26 @@ const Employee = () => {
                     </div>
 
                     <div className="employee__lowerTable">
-                        <ul>
-                            {Object.values(employees).map((employee) => (
-                                <li key={employee.key}>
-                                    <p>
-                                        Name: {employee.firstName} {employee.middleName}{" "}
-                                {employee.lastName}
+                        <ul className="employee__lowerTable-ul">
+                            {searchEmployees.map((employee, index) => (
+                                <li
+                                    className="employee__lowerTable-li"
+                                    key={employee.key}
+                                >
+                                    <p className="employee__lowerTable-data">
+                                        {index + 1}
                                     </p>
-                                    <p>Contact Number: {employee.contactNum}</p>
-                                <p>Address: {employee.address}</p>
-                                    <p>Age: {employee.age}</p>
+                                    <p className="employee__lowerTable-data">
+                                        {employee.firstName}{" "}
+                                        {employee.middleName}{" "}
+                                        {employee.lastName}
+                                    </p>
+                                    <p className="employee__lowerTable-data">
+                                        {employee.contactNum}
+                                    </p>
+                                    <p className="employee__lowerTable-data">
+                                        {employee.age}
+                                    </p>
                                 </li>
                             ))}
                         </ul>
