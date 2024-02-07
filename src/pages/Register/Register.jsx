@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getDatabase, ref, push, set } from "firebase/database";
@@ -8,6 +8,7 @@ import "./Register.css";
 const Register = () => {
     const [user] = useAuthState(auth);
     const navigate = useNavigate();
+    const fileInputRef = useRef(null);
 
     useEffect(() => {
         if (!user) {
@@ -22,11 +23,23 @@ const Register = () => {
         contactNum: "",
         address: "",
         age: "",
+        image: null,
     });
+
+    const [imageUrl, setImageUrl] = useState(null);
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         setFormData({ ...formData, [name]: value });
+    };
+
+    const handleImageChange = (event) => {
+        const file = event.target.files[0];
+        setFormData({ ...formData, image: file });
+
+        // Create a URL for the uploaded image
+        const imageUrl = URL.createObjectURL(file);
+        setImageUrl(imageUrl);
     };
 
     const handleSubmit = async (event) => {
@@ -37,7 +50,17 @@ const Register = () => {
             const newEmployeeKey = push(ref(database, "employees")).key;
             const newEmployeeRef = ref(database, `employees/${newEmployeeKey}`);
 
-            await set(newEmployeeRef, formData);
+            const formDataWithImage = new FormData();
+            formDataWithImage.append("image", formData.image);
+
+            // Add other form fields to the FormData object
+            Object.entries(formData).forEach(([key, value]) => {
+                if (key !== "image") {
+                    formDataWithImage.append(key, value);
+                }
+            });
+
+            await set(newEmployeeRef, Object.fromEntries(formDataWithImage));
 
             console.log("Employee data submitted successfully!");
         } catch (error) {
@@ -119,6 +142,29 @@ const Register = () => {
                     required
                 />
             </div>
+            {/* New input field for image upload */}
+            <div className="register__input-wrapper">
+                <label htmlFor="image">ID Image: </label>
+                <input
+                    type="file"
+                    id="image"
+                    name="image"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    ref={fileInputRef}
+                />
+            </div>
+
+            {/* Display the image after uploading */}
+            {imageUrl && (
+                <div className="register__image-preview">
+                    <img
+                        className="register__image-previewImg"
+                        src={imageUrl}
+                        alt="Uploaded ID Image"
+                    />
+                </div>
+            )}
             <button onClick={handleSubmit} className="register__button">
                 Register
             </button>
