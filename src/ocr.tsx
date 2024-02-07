@@ -11,16 +11,11 @@ import {
 import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone';
 import { createWorker } from 'tesseract.js';
 
-interface SectionProps {
-  children: React.ReactNode;
-  active?: boolean;
-}
-
-
-const Section = ({ children, active = false }: SectionProps ) => {
+// Remove TypeScript interfaces
+const Section = ({ children, active = false }) => {
   return (
     <Box
-      sx={{
+      style={{
         backgroundColor: active ? 'lightblue' : 'white',
         padding: '10px',
         borderRadius: 'md',
@@ -34,13 +29,13 @@ const Section = ({ children, active = false }: SectionProps ) => {
 
 const Home = () => {
   const [formInput, setFormInput] = useState('');
-  const [imageData, setImageData] = useState<null | string>(null);
+  const [imageData, setImageData] = useState(null);
   const [progress, setProgress] = useState(0);
   const [progressLabel, setProgressLabel] = useState('idle');
-  const [ocrLines, setOcrLines] = useState<string[]>([]);
+  const [ocrLines, setOcrLines] = useState([]);
   const [selectedSectionIndex, setSelectedSectionIndex] = useState(0);
 
-  const workerRef = useRef<Tesseract.Worker | null>(null);
+  const workerRef = useRef(null);
 
   useEffect(() => {
     workerRef.current = createWorker({
@@ -57,11 +52,11 @@ const Home = () => {
     };
   }, []);
 
-  const loadFile = (file: File) => {
+  const loadFile = (file) => {
     const reader = new FileReader();
     reader.onloadend = () => {
       const imageDataUri = reader.result;
-      setImageData(imageDataUri as string);
+      setImageData(imageDataUri);
     };
     reader.readAsDataURL(file);
   };
@@ -70,18 +65,18 @@ const Home = () => {
     setProgress(0);
     setProgressLabel('starting');
 
-    const worker = workerRef.current!;
+    const worker = workerRef.current;
     await worker.load();
     await worker.loadLanguage('eng');
     await worker.initialize('eng');
 
-    const response = await worker.recognize(imageData!);
+    const response = await worker.recognize(imageData);
     const lines = response.data.text.split("\n");
     setOcrLines(lines);
     setSelectedSectionIndex(0);
   };
 
-  const handleFormChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFormChange = (event) => {
     setFormInput(event.target.value);
   };
 
@@ -138,10 +133,9 @@ const Home = () => {
             Next Section
           </Button>
         </Stack>
-      </Group> {/* Closing tag for the Group component */}
+      </Group>
     </>
   );
 };
-
 
 export default Home;
