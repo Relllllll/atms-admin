@@ -1,3 +1,29 @@
+:root {
+    /* color */
+    --clr-primary: #f7b137;
+    --clr-primary-hover: #f9dcaa;
+    --clr-light: #e1e1e1;
+    --clr-gray: #a1a1a1;
+    --clr-dark-blue: #002147;
+
+    /* sizes */
+    --size-xxs: 0.5rem; /* 8px */
+    --size-xs: 0.75rem; /* 12px */
+    --size-sm: 0.875rem; /* 14px */
+    --size-base: 1rem; /* 16px default */
+    --size-lg: 1.125rem; /* 18px*/
+    --size-xl: 1.25rem; /* 20px */
+    --size-2xl: 1.5rem; /* 24px */
+    --size-3xl: 1.875rem; /* 30px */
+    --size-4xl: 2.25rem; /* 36px */
+    --size-5xl: 3rem; /* 48px */
+    --size-6xl: 3.75rem; /* 60px */
+    --size-7xl: 4.5rem; /* 72px */
+    --size-8xl: 6rem; /* 96px */
+    --size-9xl: 8rem; /* 128px */
+    --size-10xl: 10rem; /* 160px */
+}
+
 * {
     margin: 0;
     line-height: calc(1em + 0.5rem);
@@ -14,7 +40,15 @@ body {
 .page-wrapper {
     height: 100vh;
     display: flex;
-    flex-direction: column;
+    background-color: var(--clr-gray);
+}
+
+.main {
+    flex: 1;
+    background-color: var(--clr-light);
+    margin: 0.5rem;
+    border-radius: 0.5rem;
+    padding: 1rem;
 }
 
 img,
