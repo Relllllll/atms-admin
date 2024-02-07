@@ -1,0 +1,23 @@
+.employee{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.employee__searchBox-wrapper{
+    display: flex;
+    background-color: var(--clr-light-gray);
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    border: 1px solid var(--clr-gray);
+    gap: 1rem;
+}
+
+.employee__searchBox-icon{
+    width: var(--size-2xl);
+}
+
+.employee__searchBox{
+    border: none;
+    background: none;
+}
