@@ -3,12 +3,36 @@ import { useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getDatabase, ref, push, set } from "firebase/database";
 import { auth } from "../../firebase";
+import { createWorker } from "tesseract.js";
 import "./Register.css";
 
 const Register = () => {
     const [user] = useAuthState(auth);
     const navigate = useNavigate();
     const fileInputRef = useRef(null);
+
+    const [progress, setProgress] = useState(0);
+    const [ocrLines, setOcrLines] = useState([]);
+    const [selectedSectionIndex, setSelectedSectionIndex] = useState(0);
+
+    const workerRef = useRef(null);
+
+    useEffect(() => {
+        workerRef.current = createWorker({
+            logger: (message) => {
+                if ("progress" in message) {
+                    setProgress(message.progress);
+                    console.log(
+                        message.progress == 1 ? "Done" : message.status
+                    );
+                }
+            },
+        });
+        return () => {
+            // workerRef.current?.terminate();
+            workerRef.current = null;
+        };
+    }, []);
 
     useEffect(() => {
         if (!user) {
@@ -67,6 +91,24 @@ const Register = () => {
             console.error("Error submitting!", error);
         }
     };
+
+    const handleExtract = async () => {
+        setProgress(0);
+
+        const worker = workerRef.current;
+        await worker.load();
+        await worker.loadLanguage("eng");
+        await worker.initialize("eng");
+
+        const response = await worker.recognize(imageUrl);
+        const lines = response.data.text.split("\n");
+        setOcrLines(lines);
+        setSelectedSectionIndex(0);
+    };
+
+    useEffect(() => {
+        console.log(ocrLines[selectedSectionIndex]);
+    }, [selectedSectionIndex, ocrLines]);
 
     return (
         <div className="register">
@@ -165,6 +207,9 @@ const Register = () => {
                     />
                 </div>
             )}
+
+            <button onClick={handleExtract}>GOOOOO</button>
+
             <button onClick={handleSubmit} className="register__button">
                 Register
             </button>
