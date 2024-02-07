@@ -1,23 +1,27 @@
-.employee{
+.employee {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    padding: 0 !important;
 }
 
-.employee__searchBox-wrapper{
+.employee__searchBox-wrapper {
     display: flex;
     background-color: var(--clr-light-gray);
     padding: 0.5rem 1rem;
     border-radius: 1rem;
     border: 1px solid var(--clr-gray);
-    gap: 1rem;
+    margin: 1rem;
 }
 
-.employee__searchBox-icon{
+.employee__searchBox-icon {
     width: var(--size-2xl);
 }
 
-.employee__searchBox{
+.employee__searchBox {
     border: none;
     background: none;
+}
+
+.employee__list {
+    padding: 1rem;
 }
