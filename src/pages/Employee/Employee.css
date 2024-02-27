@@ -20,69 +20,60 @@
 .employee__searchBox {
     border: none;
     background: none;
+    width: 100%;
+}
+
+.employee__hr {
+}
+
+.employee__list-container {
+    padding: 1rem;
 }
 
 .employee__title {
     color: var(--clr-dark-blue);
 }
 
-.employee__list {
+.employee__tables {
     padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    gap: 0.3rem;
 }
 
-.employee__upperTable {
-    border: 1rem solid var(--clr-light-gray);
+.employee__table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.employee__table th,
+.employee__table td {
+    border: 1px solid var(--clr-light-gray);
+    padding: 0.5rem;
+    text-align: left;
+}
+
+.employee__table th {
     background-color: var(--clr-light-gray);
     color: var(--clr-gray);
-    border-radius: 1rem;
     font-weight: 600;
-    padding-left: 1rem;
-    padding-right: 1rem;
-    display: flex;
-    justify-content: space-between;
 }
 
-.employee__upperTable p:nth-child(1) {
-    flex: 1; /* Adjust the flex property as needed for No. */
+.employee__table th:first-child,
+.employee__table td:first-child {
+    border-left: none; /* Remove left border for header and cells */
 }
 
-.employee__upperTable p:nth-child(2) {
-    flex: 3; /* Adjust the flex property as needed for Name */
+.employee__table th:last-child,
+.employee__table td:last-child {
+    border-right: none; /* Remove right border for header and cells */
 }
 
-.employee__upperTable p:nth-child(3) {
-    flex: 2; /* Adjust the flex property as needed for Contacts */
+.employee__table tbody tr {
+    background-color: white; /* Apply background color to data rows */
+    margin-top: 8px; /* Adjust the top margin for the data rows */
 }
 
-.employee__upperTable p:nth-child(4) {
-    flex: 2; /* Adjust the flex property as needed for Status Today */
-}
-
-.employee__lowerTable {
-    border: 1rem solid var(--clr-light-gray);
-    background-color: var(--clr-light-gray);
-    border-radius: 1rem;
-}
-
-.employee__lowerTable-li {
-    list-style-type: none;
-    display: flex;
-    justify-content: space-between;
-}
-
-.employee__lowerTable-li .employee__lowerTable-data:nth-child(1) {
-    flex: 1;
-}
-.employee__lowerTable-li .employee__lowerTable-data:nth-child(2) {
-    flex: 3;
-}
-.employee__lowerTable-li .employee__lowerTable-data:nth-child(3) {
-    flex: 2;
-}
-.employee__lowerTable-li .employee__lowerTable-data:nth-child(4) {
-    flex: 2;
+.employee__table tbody tr:nth-child(even) {
+    background-color: var(
+        --clr-light-gray
+    ); /* Apply alternate row background color */
 }

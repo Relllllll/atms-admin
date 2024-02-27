@@ -75,42 +75,35 @@ const Employee = () => {
                     onChange={(e) => setSearchInput(e.target.value)}
                 />
             </div>
-            <hr />
-            <h1 className="employee__title">Full Employee Details</h1>
-            <div className="employee__tables">
-                <div className="employee__list">
-                    <div className="employee__upperTable">
-                        <p>No.</p>
-                        <p>Name</p>
-                        <p>Contacts</p>
-                        <p>Status Today</p>
-                    </div>
+            <hr className="employee__hr" />
 
-                    <div className="employee__lowerTable">
-                        <ul className="employee__lowerTable-ul">
+            <div className="employee__list-container">
+                <h1 className="employee__title">Full Employee Details</h1>
+                <div className="employee__tables">
+                    <table className="employee__table">
+                        <thead>
+                            <tr className="employee__table-header">
+                                <th>No.</th>
+                                <th>Name</th>
+                                <th>Contacts</th>
+                                <th>Status Today</th>
+                            </tr>
+                        </thead>
+                        <tbody>
                             {searchEmployees.map((employee, index) => (
-                                <li
-                                    className="employee__lowerTable-li"
-                                    key={employee.key}
-                                >
-                                    <p className="employee__lowerTable-data">
-                                        {index + 1}
-                                    </p>
-                                    <p className="employee__lowerTable-data">
+                                <tr key={employee.key}>
+                                    <td>{index + 1}</td>
+                                    <td>
                                         {employee.firstName}{" "}
                                         {employee.middleName}{" "}
                                         {employee.lastName}
-                                    </p>
-                                    <p className="employee__lowerTable-data">
-                                        {employee.contactNum}
-                                    </p>
-                                    <p className="employee__lowerTable-data">
-                                        {employee.age}
-                                    </p>
-                                </li>
+                                    </td>
+                                    <td>{employee.contactNum}</td>
+                                    <td>{employee.age}</td>
+                                </tr>
                             ))}
-                        </ul>
-                    </div>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
