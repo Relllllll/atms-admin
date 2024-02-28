@@ -1,0 +1,43 @@
+.settings__title {
+    color: var(--clr-dark-blue);
+    position: relative;
+    margin-left: 1rem;
+}
+
+.settings__title::before{
+    content: '';
+    position: absolute;
+    top:0 ;
+    left: -1.2rem;
+    height: 100%;
+    width: 0.5rem;
+    background-color: var(--clr-primary);
+    border-radius: 1rem;
+}
+
+.settings__inputs-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.settings__input-wrapper {
+    display: flex;
+    align-items: center;
+    width: 40%;
+    justify-content: space-between;
+}
+
+.settings__input-label {
+    color: var(--clr-gray);
+    font-weight: 600;
+    font-size: var(--size-2xl);
+    text-transform: uppercase;
+}
+
+.settings__input-inputBox {
+    background-color: var(--clr-light-gray);
+    border: 1px solid var(--clr-gray);
+    padding: 0.8rem;
+    border-radius: 1rem;
+}
