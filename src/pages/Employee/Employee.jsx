@@ -81,17 +81,20 @@ const Employee = () => {
                 <h1 className="employee__title">Full Employee Details</h1>
                 <div className="employee__tables">
                     <table className="employee__table">
-                        <thead>
-                            <tr className="employee__table-header">
+                        <thead className="employee__table-header">
+                            <tr>
                                 <th>No.</th>
                                 <th>Name</th>
                                 <th>Contacts</th>
                                 <th>Status Today</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody className="employee__table-body">
                             {searchEmployees.map((employee, index) => (
-                                <tr key={employee.key}>
+                                <tr
+                                    className="employee__list-row"
+                                    key={employee.key}
+                                >
                                     <td>{index + 1}</td>
                                     <td>
                                         {employee.firstName}{" "}

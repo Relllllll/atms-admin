@@ -1,8 +1,22 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { getAuth, signOut } from "firebase/auth";
 import logo from "/logo.png";
 import "./Sidebar.css";
 
 const Sidebar = () => {
+    const auth = getAuth();
+    const navigate = useNavigate();
+
+    const handleSignOut = () => {
+        signOut(auth)
+            .then(() => {
+                navigate("/");
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+
     return (
         <sidebar className="sidebar">
             <div className="sidebar__top-logo-container">
@@ -97,7 +111,7 @@ const Sidebar = () => {
                     <p className="sidebar__menu-item">Settings</p>
                 </Link>
 
-                <Link to="/logout" className="sidebar__menu-link">
+                <Link onClick={handleSignOut} className="sidebar__menu-link">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"

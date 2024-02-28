@@ -3,36 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getDatabase, ref, push, set } from "firebase/database";
 import { auth } from "../../firebase";
-import { createWorker } from "tesseract.js";
 import "./Register.css";
 
 const Register = () => {
     const [user] = useAuthState(auth);
     const navigate = useNavigate();
     const fileInputRef = useRef(null);
-
-    const [progress, setProgress] = useState(0);
-    const [ocrLines, setOcrLines] = useState([]);
-    const [selectedSectionIndex, setSelectedSectionIndex] = useState(0);
-
-    const workerRef = useRef(null);
-
-    useEffect(() => {
-        workerRef.current = createWorker({
-            logger: (message) => {
-                if ("progress" in message) {
-                    setProgress(message.progress);
-                    console.log(
-                        message.progress == 1 ? "Done" : message.status
-                    );
-                }
-            },
-        });
-        return () => {
-            // workerRef.current?.terminate();
-            workerRef.current = null;
-        };
-    }, []);
 
     useEffect(() => {
         if (!user) {
@@ -59,11 +35,22 @@ const Register = () => {
 
     const handleImageChange = (event) => {
         const file = event.target.files[0];
-        setFormData({ ...formData, image: file });
+        setImageUrl(URL.createObjectURL(file));
+        formData.image = file; // Update formData for submission
+    };
 
-        // Create a URL for the uploaded image
-        const imageUrl = URL.createObjectURL(file);
-        setImageUrl(imageUrl);
+    const handleDragOver = (event) => {
+        event.preventDefault();
+    };
+
+    const handleDrop = (event) => {
+        event.preventDefault();
+        const file = event.dataTransfer.files[0];
+        if (file.type.startsWith("image/")) {
+            handleImageChange(event);
+        } else {
+            alert("Please select an image file.");
+        }
     };
 
     const handleSubmit = async (event) => {
@@ -92,127 +79,143 @@ const Register = () => {
         }
     };
 
-    const handleExtract = async () => {
-        setProgress(0);
-
-        const worker = workerRef.current;
-        await worker.load();
-        await worker.loadLanguage("eng");
-        await worker.initialize("eng");
-
-        const response = await worker.recognize(imageUrl);
-        const lines = response.data.text.split("\n");
-        setOcrLines(lines);
-        setSelectedSectionIndex(0);
-    };
-
-    useEffect(() => {
-        console.log(ocrLines[selectedSectionIndex]);
-    }, [selectedSectionIndex, ocrLines]);
-
     return (
-        <div className="register">
-            <h1>Register</h1>
-            <div className="register__input-wrapper">
-                <label htmlFor="firstName">First Name: </label>
-                <input
-                    type="text"
-                    id="firstName"
-                    name="firstName"
-                    placeholder="First Name"
-                    value={formData.firstName}
-                    onChange={handleInputChange}
-                    required
-                />
-            </div>
-            <div className="register__input-wrapper">
-                <label htmlFor="middleName">Middle Name: </label>
-                <input
-                    type="text"
-                    id="middleName"
-                    name="middleName"
-                    placeholder="Middle Name"
-                    value={formData.middleName}
-                    onChange={handleInputChange}
-                />
-            </div>
-            <div className="register__input-wrapper">
-                <label htmlFor="lastName">Last Name: </label>
-                <input
-                    type="text"
-                    id="lastName"
-                    name="lastName"
-                    placeholder="Last Name"
-                    value={formData.lastName}
-                    onChange={handleInputChange}
-                    required
-                />
-            </div>
-            <div className="register__input-wrapper">
-                <label htmlFor="contactNum">Contact Number: </label>
-                <input
-                    type="number"
-                    id="contactNum"
-                    name="contactNum"
-                    placeholder="First Name"
-                    value={formData.contactNum}
-                    onChange={handleInputChange}
-                    required
-                />
-            </div>
-            <div className="register__input-wrapper">
-                <label htmlFor="address">Address: </label>
-                <input
-                    type="text"
-                    id="address"
-                    name="address"
-                    placeholder="Address"
-                    value={formData.address}
-                    onChange={handleInputChange}
-                    required
-                />
-            </div>
-            <div className="register__input-wrapper">
-                <label htmlFor="age">Age: </label>
-                <input
-                    type="number"
-                    id="age"
-                    name="age"
-                    placeholder="Age"
-                    value={formData.age}
-                    onChange={handleInputChange}
-                    required
-                />
-            </div>
-            {/* New input field for image upload */}
-            <div className="register__input-wrapper">
-                <label htmlFor="image">ID Image: </label>
-                <input
-                    type="file"
-                    id="image"
-                    name="image"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    ref={fileInputRef}
-                />
-            </div>
-
-            {/* Display the image after uploading */}
-            {imageUrl && (
-                <div className="register__image-preview">
-                    <img
-                        className="register__image-previewImg"
-                        src={imageUrl}
-                        alt="Uploaded ID Image"
+        <div className="register main">
+            <h1 className="register__title">Register</h1>
+            <div className="register__inputs-container">
+                <div className="register__input-wrapper">
+                    <label
+                        className="register__input-label"
+                        htmlFor="firstName"
+                    >
+                        First Name:{" "}
+                    </label>
+                    <input
+                        className="register__input-inputBox"
+                        type="text"
+                        id="firstName"
+                        name="firstName"
+                        placeholder="First Name"
+                        value={formData.firstName}
+                        onChange={handleInputChange}
+                        required
                     />
                 </div>
-            )}
+                <div className="register__input-wrapper">
+                    <label
+                        className="register__input-label"
+                        htmlFor="middleName"
+                    >
+                        Middle Name:{" "}
+                    </label>
+                    <input
+                        className="register__input-inputBox"
+                        type="text"
+                        id="middleName"
+                        name="middleName"
+                        placeholder="Middle Name"
+                        value={formData.middleName}
+                        onChange={handleInputChange}
+                    />
+                </div>
+                <div className="register__input-wrapper">
+                    <label className="register__input-label" htmlFor="lastName">
+                        Last Name:{" "}
+                    </label>
+                    <input
+                        className="register__input-inputBox"
+                        type="text"
+                        id="lastName"
+                        name="lastName"
+                        placeholder="Last Name"
+                        value={formData.lastName}
+                        onChange={handleInputChange}
+                        required
+                    />
+                </div>
+                <div className="register__input-wrapper">
+                    <label className="register__input-label" htmlFor="age">
+                        Age:{" "}
+                    </label>
+                    <input
+                        className="register__input-inputBox"
+                        type="number"
+                        id="age"
+                        name="age"
+                        placeholder="Age"
+                        value={formData.age}
+                        onChange={handleInputChange}
+                        required
+                    />
+                </div>
+                <div className="register__input-wrapper">
+                    <label
+                        className="register__input-label"
+                        htmlFor="contactNum"
+                    >
+                        Contact Number:{" "}
+                    </label>
+                    <input
+                        className="register__input-inputBox"
+                        type="number"
+                        id="contactNum"
+                        name="contactNum"
+                        placeholder="Contact Number"
+                        value={formData.contactNum}
+                        onChange={handleInputChange}
+                        required
+                    />
+                </div>
+                <div className="register__input-wrapper">
+                    <label className="register__input-label" htmlFor="address">
+                        Address:{" "}
+                    </label>
+                    <input
+                        className="register__input-inputBox"
+                        type="text"
+                        id="address"
+                        name="address"
+                        placeholder="Address"
+                        value={formData.address}
+                        onChange={handleInputChange}
+                        required
+                    />
+                </div>
+                {/* New input field for image upload */}
+                <div
+                    className="register__image-upload-container"
+                    onDragOver={handleDragOver}
+                    onDrop={handleDrop}
+                    onClick={() => fileInputRef.current.click()}
+                >
+                    <img
+                        className="register__image-upload-plus"
+                        src="/add.png"
+                    />
+                    <input
+                        type="file"
+                        id="image-input"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        ref={fileInputRef}
+                        hidden
+                    />
+                </div>
 
-            <button onClick={handleExtract}>GOOOOO</button>
+                {imageUrl && (
+                    <div className="register__image-preview">
+                        <img
+                            className="register__image-previewImg"
+                            src={imageUrl}
+                            alt="Uploaded ID Image"
+                        />
+                    </div>
+                )}
 
-            <button onClick={handleSubmit} className="register__button">
-                Register
-            </button>
+                <button onClick={handleSubmit} className="register__button">
+                    Register
+                </button>
+            </div>
         </div>
     );
 };

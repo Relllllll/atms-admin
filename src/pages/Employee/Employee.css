@@ -23,9 +23,6 @@
     width: 100%;
 }
 
-.employee__hr {
-}
-
 .employee__list-container {
     padding: 1rem;
 }
@@ -44,10 +41,22 @@
     margin-top: 1rem;
 }
 
+.employee__table-header::after {
+    content: "";
+    display: block;
+    height: 1.5rem;
+    width: 100%;
+    background: none;
+}
+
+.employee__table-header {
+    text-align: center;
+}
+
 .employee__table th,
 .employee__table td {
     border: 1px solid var(--clr-light-gray);
-    padding: 0.5rem;
+    padding: 1rem;
     text-align: left;
 }
 
@@ -57,23 +66,8 @@
     font-weight: 600;
 }
 
-.employee__table th:first-child,
-.employee__table td:first-child {
-    border-left: none; /* Remove left border for header and cells */
-}
-
-.employee__table th:last-child,
-.employee__table td:last-child {
-    border-right: none; /* Remove right border for header and cells */
-}
-
-.employee__table tbody tr {
-    background-color: white; /* Apply background color to data rows */
-    margin-top: 8px; /* Adjust the top margin for the data rows */
-}
-
-.employee__table tbody tr:nth-child(even) {
-    background-color: var(
-        --clr-light-gray
-    ); /* Apply alternate row background color */
+.employee__table-body {
+    color: var(--clr-dark-blue);
+    font-weight: 600;
+    background-color: var(--clr-light-gray);
 }
