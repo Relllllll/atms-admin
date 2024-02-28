@@ -2,7 +2,8 @@
     /* color */
     --clr-primary: #f7b137;
     --clr-primary-hover: #f9dcaa;
-    --clr-light: #e1e1e1;
+    --clr-light: #faf9f6;
+    --clr-light-gray: #e1e1e1;
     --clr-gray: #a1a1a1;
     --clr-dark-blue: #002147;
 
@@ -51,6 +52,9 @@ body {
     padding: 1rem;
 }
 
+.title-primary {
+    color: var(--clr-primary);
+}
 img,
 picture,
 video,
@@ -86,4 +90,8 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type="number"] {
     -moz-appearance: textfield;
+}
+
+*:focus {
+    outline: none;
 }
