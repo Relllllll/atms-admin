@@ -34,7 +34,9 @@ const Employee = () => {
             employeesRef,
             (snapshot) => {
                 const employeesData = snapshot.val();
-                setEmployees(employeesData);
+                if (employeesData) {
+                    setEmployees(employeesData);
+                }
             },
             { onlyOnce: true }
         );
@@ -89,23 +91,27 @@ const Employee = () => {
                                 <th>Status Today</th>
                             </tr>
                         </thead>
-                        <tbody className="employee__table-body">
-                            {searchEmployees.map((employee, index) => (
-                                <tr
-                                    className="employee__list-row"
-                                    key={employee.key}
-                                >
-                                    <td>{index + 1}</td>
-                                    <td>
-                                        {employee.firstName}{" "}
-                                        {employee.middleName}{" "}
-                                        {employee.lastName}
-                                    </td>
-                                    <td>{employee.contactNum}</td>
-                                    <td>{employee.age}</td>
-                                </tr>
-                            ))}
-                        </tbody>
+                        {searchEmployees.length > 0 ? (
+                            <tbody className="employee__table-body">
+                                {searchEmployees.map((employee, index) => (
+                                    <tr
+                                        className="employee__list-row"
+                                        key={employee.key}
+                                    >
+                                        <td>{index + 1}</td>
+                                        <td>
+                                            {employee.firstName}{" "}
+                                            {employee.middleName}{" "}
+                                            {employee.lastName}
+                                        </td>
+                                        <td>{employee.contactNum}</td>
+                                        <td>{employee.age}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        ) : (
+                            <></>
+                        )}
                     </table>
                 </div>
             </div>

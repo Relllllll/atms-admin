@@ -164,7 +164,7 @@ const Register = () => {
             if (formData.image) {
                 const imageUrl = await uploadToImageStorage(
                     formData.image,
-                    `${formData.lastName}_${formData.firstName}`
+                    `${formData.firstName}_${formData.lastName}`
                 );
 
                 const database = getDatabase();
