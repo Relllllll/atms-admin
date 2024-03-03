@@ -28,6 +28,7 @@
 }
 
 .sidebar__top-title {
+    color: var(--clr-dark-blue);
     font-size: var(--size-2xl);
     text-align: center;
 }

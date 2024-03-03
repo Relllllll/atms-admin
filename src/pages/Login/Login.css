@@ -144,8 +144,9 @@
     background-color: #faf9f6;
     border: 1px solid var(--clr-gray);
     border-radius: 1rem;
-    padding-left: 2rem;
     padding: 0.5rem;
+    width: 23rem;
+    height: 3.5rem;
     gap: 1rem;
 }
 

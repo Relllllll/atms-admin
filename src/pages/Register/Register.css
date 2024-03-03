@@ -12,6 +12,23 @@
     color: var(--clr-dark-blue);
 }
 
+.register__title {
+    color: var(--clr-dark-blue);
+    position: relative;
+    margin-left: 1rem;
+}
+
+.register__title::before{
+    content: '';
+    position: absolute;
+    top:0 ;
+    left: -1.2rem;
+    height: 100%;
+    width: 0.5rem;
+    background-color: var(--clr-primary);
+    border-radius: 1rem;
+}
+
 .register__inputs-container {
     display: flex;
     flex-direction: column;
