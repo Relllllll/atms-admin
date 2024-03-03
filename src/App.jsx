@@ -4,7 +4,7 @@ import Login from "./pages/Login/Login.jsx";
 import Employee from "./pages/Employee/Employee.jsx";
 import Register from "./pages/Register/Register.jsx";
 import Settings from "./pages/Settings/Settings.jsx";
-// import Logs from "./pages/Logs/Logs.jsx";
+import Logs from "./pages/Logs/Logs.jsx";
 
 const router = createBrowserRouter([
     {
@@ -23,10 +23,10 @@ const router = createBrowserRouter([
                 path: "/register-employee",
                 element: <Register />,
             },
-            // {
-            //     path: "/logs",
-            //     element: <Logs />,
-            // },
+            {
+                path: "/logs",
+                element: <Logs />,
+            },
             {
                 path: "/settings",
                 element: <Settings />,
