@@ -20,7 +20,7 @@
 }
 
 .sidebar__top-logo {
-    width: 5rem;
+    width: 7rem;
     position: absolute;
     bottom: 0; /* Move the image up by 50% from the bottom of the parent */
     left: 50%; /* Center the image horizontally */

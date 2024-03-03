@@ -35,7 +35,7 @@ const Login = () => {
             <div className="login__background-image-container">
                 <img
                     className="login__background-image"
-                    src="/pinagbgcopy.jpg"
+                    src="barangaypic.jpg"
                 />
             </div>
             <div className="login__forms">
