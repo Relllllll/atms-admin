@@ -5,6 +5,7 @@ import Employee from "./pages/Employee/Employee.jsx";
 import Register from "./pages/Register/Register.jsx";
 import Settings from "./pages/Settings/Settings.jsx";
 import Logs from "./pages/Logs/Logs.jsx";
+import EmployeeDetails from "./pages/EmployeeDetails/EmployeeDetails.jsx";
 
 const router = createBrowserRouter([
     {
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
             {
                 path: "/employee-list",
                 element: <Employee />,
+            },
+            {
+                path: "/employee-details/:id",
+                element: <EmployeeDetails />,
             },
             {
                 path: "/register-employee",
