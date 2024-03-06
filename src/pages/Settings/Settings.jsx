@@ -41,7 +41,7 @@ const Settings = () => {
                         className="settings__input-label"
                         htmlFor="oldPassword"
                     >
-                        Old Passwrd:{" "}
+                        Old Password:{" "}
                     </label>
                     <input
                         className="settings__input-inputBox"
