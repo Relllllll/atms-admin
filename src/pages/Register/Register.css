@@ -1,3 +1,7 @@
+.register__image-upload-container {
+    margin-top: 0.5rem;
+}
+
 .register__image-previewImg {
     width: var(--size-10xl);
 }
@@ -6,10 +10,7 @@
     display: flex;
     flex-direction: column;
     gap: 2rem;
-}
-
-.register__title {
-    color: var(--clr-dark-blue);
+    overflow-y: scroll;
 }
 
 .register__title {
@@ -38,14 +39,14 @@
 .register__input-wrapper {
     display: flex;
     align-items: center;
-    width: 40%;
+    width: 85%;
     justify-content: space-between;
 }
 
 .register__input-label {
     color: var(--clr-gray);
     font-weight: 600;
-    font-size: var(--size-2xl);
+    font-size: var(--size-xl);
     text-transform: uppercase;
 }
 
@@ -53,31 +54,41 @@
     background-color: var(--clr-light-gray);
     border: 1px solid var(--clr-gray);
     padding: 0.8rem;
-    border-radius: 1rem;
+    border-radius: 0.5rem;
+    width: 35rem;
 }
 
 .register__image-upload-container {
+    overflow: hidden;
+    position: relative;
+    border-style: dashed;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     background-color: var(--clr-light-gray);
+    border-color: var(--clr-gray);
+    border-width: 0.5px;
     border-radius: 1rem;
-    width: 20rem;
+    width: 40rem;
     height: 20rem;
 }
 
 .register__image-upload-plus {
-    width: 10rem;
+    width: 5rem;
+}
+
+.register__skip{
+    margin-top: auto;
 }
 
 .register__button {
     margin-left: auto;
-    width: 10rem;
-    padding: 1rem;
-    border-radius: 1rem;
-    font-size: var(--size-lg);
-    font-weight: 600;
     color: var(--clr-dark-blue);
     background-color: var(--clr-primary);
+    font-size: var(--size-lg);
+    width: 9rem;
+    padding: 0.5rem;
+    border-radius: 2rem;
+    font-weight: 700;
 }
