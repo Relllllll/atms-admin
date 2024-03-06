@@ -33,7 +33,7 @@ const Settings = () => {
     };
 
     return (
-        <div className="main">
+        <div className="settings main">
             <h1 className="settings__title">Change Password</h1>
             <div className="settings__inputs-container">
                 <div className="settings__input-wrapper">
@@ -48,7 +48,7 @@ const Settings = () => {
                         type="password"
                         id="oldPassword"
                         name="oldPassword"
-                        placeholder="Old Password"
+                        placeholder="Enter old password..."
                         value={oldPassword}
                         onChange={(e) => setOldPassword(e.target.value)}
                         required
@@ -66,7 +66,7 @@ const Settings = () => {
                         type="password"
                         id="newPassword"
                         name="newPassword"
-                        placeholder="New Password"
+                        placeholder="Enter new password..."
                         value={newPassword}
                         onChange={(e) => setNewPassword(e.target.value)}
                         required
@@ -79,7 +79,7 @@ const Settings = () => {
                     className="settings__change-password-button"
                     onClick={handleChangePassword}
                 >
-                    Change Password
+                    CHANGE PASSWORD
                 </button>
             </div>
         </div>

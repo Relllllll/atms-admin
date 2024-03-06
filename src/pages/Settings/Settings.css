@@ -1,3 +1,7 @@
+.settings {
+    gap: 2;
+}
+
 .settings__title {
     color: var(--clr-dark-blue);
     position: relative;
@@ -12,7 +16,6 @@
     height: 100%;
     width: 0.5rem;
     background-color: var(--clr-primary);
-    border-radius: 1rem;
 }
 
 .settings__inputs-container {
@@ -24,14 +27,14 @@
 .settings__input-wrapper {
     display: flex;
     align-items: center;
-    width: 40%;
+    width: 50%;
     justify-content: space-between;
 }
 
 .settings__input-label {
     color: var(--clr-gray);
     font-weight: 600;
-    font-size: var(--size-2xl);
+    font-size: var(--size-xl);
     text-transform: uppercase;
 }
 
@@ -39,5 +42,16 @@
     background-color: var(--clr-light-gray);
     border: 1px solid var(--clr-gray);
     padding: 0.8rem;
-    border-radius: 1rem;
+    border-radius: 0.5rem;
+}
+
+.settings__change-password-button {
+    margin-left: auto;
+    color: var(--clr-dark-blue);
+    background-color: var(--clr-primary);
+    font-size: var(--size-lg);
+    width: 15rem;
+    padding: 0.5rem;
+    border-radius: 2rem;
+    font-weight: 700;
 }
