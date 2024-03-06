@@ -195,14 +195,15 @@ const Register = () => {
     return (
         <div className="register main">
             {!showRegistrationForm ? (
-                <div>
+                <>
+                <h1 className="register__title">Register - Upload ID</h1>
                     <div
                         className="register__image-upload-container"
                         onClick={() => idImageInputRef.current.click()}
                     >
                         <img
                             className="register__image-upload-plus"
-                            src="/add.png"
+                            src="/image-gallery.png"
                         />
                         <input
                             type="file"
@@ -210,16 +211,17 @@ const Register = () => {
                             accept="image/*"
                             onChange={handleIDImageChange}
                             ref={idImageInputRef}
+                            hidden
                         />
                     </div>
 
                     <button
                         onClick={handleSkipIDStep}
-                        className="register__button"
+                        className="register__button register__skip"
                     >
-                        Skip
+                        SKIP
                     </button>
-                </div>
+                </>
             ) : (
                 showRegistrationForm && (
                     <>
@@ -237,7 +239,7 @@ const Register = () => {
                                     type="text"
                                     id="firstName"
                                     name="firstName"
-                                    placeholder="First Name"
+                                    placeholder="Enter first name..."
                                     value={formData.firstName}
                                     onChange={handleInputChange}
                                     required
@@ -255,7 +257,7 @@ const Register = () => {
                                     type="text"
                                     id="middleName"
                                     name="middleName"
-                                    placeholder="Middle Name"
+                                    placeholder="Enter middle name..."
                                     value={formData.middleName}
                                     onChange={handleInputChange}
                                 />
@@ -272,7 +274,7 @@ const Register = () => {
                                     type="text"
                                     id="lastName"
                                     name="lastName"
-                                    placeholder="Last Name"
+                                    placeholder="Enter last name..."
                                     value={formData.lastName}
                                     onChange={handleInputChange}
                                     required
@@ -308,7 +310,7 @@ const Register = () => {
                                     type="number"
                                     id="contactNum"
                                     name="contactNum"
-                                    placeholder="Contact Number"
+                                    placeholder="Enter contact number..."
                                     value={formData.contactNum}
                                     onChange={handleInputChange}
                                     required
@@ -326,33 +328,36 @@ const Register = () => {
                                     type="text"
                                     id="address"
                                     name="address"
-                                    placeholder="Address"
+                                    placeholder="Enter address..."
                                     value={formData.address}
                                     onChange={handleInputChange}
                                     required
                                 />
                             </div>
-                            {/* New input field for image upload */}
-                            <div
-                                className="register__image-upload-container"
-                                onDragOver={handleDragOver}
-                                onDrop={handleDrop}
-                                onClick={() =>
-                                    generalImageInputRef.current.click()
-                                }
-                            >
-                                <img
-                                    className="register__image-upload-plus"
-                                    src="/add.png"
-                                />
-                                <input
-                                    type="file"
-                                    id="image-input"
-                                    accept="image/*"
-                                    onChange={handleImageChange}
-                                    ref={generalImageInputRef}
-                                    hidden
-                                />
+                            <div>
+                                <label className="register__input-label">Face Picture:</label>
+                                <div
+                                    className="register__image-upload-container"
+                                    onDragOver={handleDragOver}
+                                    onDrop={handleDrop}
+                                    onClick={() =>
+                                        generalImageInputRef.current.click()
+                                    }
+                                >
+                                    
+                                    <img
+                                        className="register__image-upload-plus"
+                                        src="/image-gallery.png"
+                                    />
+                                    <input
+                                        type="file"
+                                        id="image-input"
+                                        accept="image/*"
+                                        onChange={handleImageChange}
+                                        ref={generalImageInputRef}
+                                        hidden
+                                    />
+                                </div>
                             </div>
 
                             {imageUrl && (
@@ -377,7 +382,7 @@ const Register = () => {
                                 onClick={handleSubmit}
                                 className="register__button"
                             >
-                                Register
+                                REGISTER
                             </button>
                         </div>
                     </>
