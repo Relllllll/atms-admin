@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import {
     getDatabase,
@@ -34,9 +34,14 @@ const Employee = () => {
             employeesRef,
             (snapshot) => {
                 const employeesData = snapshot.val();
-                if (employeesData) {
-                    setEmployees(employeesData);
-                }
+                // Convert object to array with id included
+                const employeesArray = Object.entries(employeesData).map(
+                    ([id, employee]) => ({
+                        id,
+                        ...employee,
+                    })
+                );
+                setEmployees(employeesArray);
             },
             { onlyOnce: true }
         );
@@ -118,9 +123,13 @@ const Employee = () => {
                                         >
                                             <td>{index + 1}</td>
                                             <td>
-                                                {employee.firstName}{" "}
-                                                {employee.middleName}{" "}
-                                                {employee.lastName}
+                                                <Link
+                                                    to={`/employee-details/${employee.id}`}
+                                                >
+                                                    {employee.firstName}{" "}
+                                                    {employee.middleName}{" "}
+                                                    {employee.lastName}
+                                                </Link>
                                             </td>
                                             <td>{employee.contactNum}</td>
                                             <td>

@@ -1,6 +1,37 @@
+import { useState } from "react";
+import {
+    getAuth,
+    updatePassword,
+    reauthenticateWithCredential,
+    EmailAuthProvider,
+} from "firebase/auth";
 import "./Settings.css";
 
 const Settings = () => {
+    const [oldPassword, setOldPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
+
+    const handleChangePassword = async () => {
+        try {
+            const auth = getAuth();
+            const user = auth.currentUser;
+            const credential = EmailAuthProvider.credential(
+                user.email,
+                oldPassword
+            );
+            await reauthenticateWithCredential(user, credential);
+
+            await updatePassword(user, newPassword);
+
+            console.log("Password updated");
+            setErrorMessage("");
+        } catch (error) {
+            console.error("Error updating password:", error.message);
+            setErrorMessage(error.message);
+        }
+    };
+
     return (
         <div className="main">
             <h1 className="settings__title">Change Password</h1>
@@ -14,12 +45,12 @@ const Settings = () => {
                     </label>
                     <input
                         className="settings__input-inputBox"
-                        type="text"
+                        type="password"
                         id="oldPassword"
-                        name="oldPasswrd"
+                        name="oldPassword"
                         placeholder="Old Password"
-                        // value={formData.oldPassword}
-                        // onChange={handleInputChange}
+                        value={oldPassword}
+                        onChange={(e) => setOldPassword(e.target.value)}
                         required
                     />
                 </div>
@@ -32,14 +63,24 @@ const Settings = () => {
                     </label>
                     <input
                         className="settings__input-inputBox"
-                        type="text"
+                        type="password"
                         id="newPassword"
                         name="newPassword"
                         placeholder="New Password"
-                        // value={formData.middleName}
-                        // onChange={handleInputChange}
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        required
                     />
                 </div>
+                {errorMessage && (
+                    <p className="settings__error-message">{errorMessage}</p>
+                )}
+                <button
+                    className="settings__change-password-button"
+                    onClick={handleChangePassword}
+                >
+                    Change Password
+                </button>
             </div>
         </div>
     );
