@@ -6,6 +6,7 @@
 
 .logs__list-container {
     padding: 1rem;
+    overflow: scroll;
 }
 
 .logs__title {
@@ -15,7 +16,7 @@
 }
 
 .logs__title::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: -1.2rem;
@@ -24,7 +25,60 @@
     background-color: var(--clr-primary);
     border-radius: 1rem;
 }
-.login__logo{
+.login__logs {
     width: 10rem;
     height: 10rem;
+}
+
+.logs__table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.logs__table-header::after {
+    content: "";
+    display: block;
+    height: 1.5rem;
+    width: 100%;
+    background: none;
+}
+
+.logs__table-header {
+    text-align: center;
+}
+
+.logs__table th,
+.logs__table td {
+    border: 1px solid var(--clr-light-gray);
+    padding: 1rem;
+    text-align: left;
+}
+
+.logs__table th {
+    background-color: var(--clr-light-gray);
+    color: var(--clr-gray);
+    font-weight: 600;
+}
+
+.logs__table-body {
+    color: var(--clr-dark-blue);
+    font-weight: 600;
+    background-color: var(--clr-light-gray);
+}
+
+.present {
+    color: var(--clr-green);
+    background-color: var(--clr-light-green);
+}
+
+.late {
+    color: var(--clr-red);
+    background-color: var(--clr-light-red);
+}
+
+.present,
+.late {
+    padding: 0.8rem;
+    border-radius: 1rem;
 }

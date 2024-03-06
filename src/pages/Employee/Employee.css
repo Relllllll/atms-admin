@@ -26,6 +26,7 @@
 
 .employee__list-container {
     padding: 1rem;
+    overflow: scroll;
 }
 
 .employee__title {
@@ -34,10 +35,10 @@
     margin-left: 1rem;
 }
 
-.employee__title::before{
-    content: '';
+.employee__title::before {
+    content: "";
     position: absolute;
-    top:0 ;
+    top: 0;
     left: -1.2rem;
     height: 100%;
     width: 0.5rem;
@@ -84,4 +85,20 @@
     color: var(--clr-dark-blue);
     font-weight: 600;
     background-color: var(--clr-light-gray);
+}
+
+.present {
+    color: var(--clr-green);
+    background-color: var(--clr-light-green);
+}
+
+.late {
+    color: var(--clr-red);
+    background-color: var(--clr-light-red);
+}
+
+.present,
+.late {
+    padding: 0.8rem;
+    border-radius: 1rem;
 }

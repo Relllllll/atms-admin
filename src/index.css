@@ -6,6 +6,10 @@
     --clr-light-gray: #e1e1e1;
     --clr-gray: #a1a1a1;
     --clr-dark-blue: #002147;
+    --clr-green: #015127;
+    --clr-light-green: #c8d7cd;
+    --clr-red: #7d0a0a;
+    --clr-light-red: #7d0a0a26;
 
     /* sizes */
     --size-xxs: 0.5rem; /* 8px */
