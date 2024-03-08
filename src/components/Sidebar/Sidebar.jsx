@@ -83,6 +83,23 @@ const Sidebar = () => {
                     </svg>
                     <p className="sidebar__menu-item">Logs</p>
                 </Link>
+                <Link to="/ticket" className="sidebar__menu-link">
+                <svg 
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="sidebar__menu-icon"
+                >
+                    <path 
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M20 12a2 2 0 0 0 2 2v4a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-4a2 2 0 0 0 2-2a2 2 0 0 0-2-2V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4a2 2 0 0 0-2 2m-3.5 4.25c0-1.5-3-2.25-4.5-2.25s-4.5.75-4.5 2.25V17h9zm-4.5-4A2.25 2.25 0 0 0 14.25 10A2.25 2.25 0 0 0 12 7.75A2.25 2.25 0 0 0 9.75 10A2.25 2.25 0 0 0 12 12.25"
+                    />
+                </svg>
+                    <p className="sidebar__menu-item">Ticket</p>
+                </Link>
             </div>
 
             <div className="sidebar__menu-container">

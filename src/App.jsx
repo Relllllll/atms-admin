@@ -6,6 +6,7 @@ import Register from "./pages/Register/Register.jsx";
 import Settings from "./pages/Settings/Settings.jsx";
 import Logs from "./pages/Logs/Logs.jsx";
 import EmployeeDetails from "./pages/EmployeeDetails/EmployeeDetails.jsx";
+import Ticket from "./pages/TIcket/Ticket.jsx";
 
 const router = createBrowserRouter([
     {
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
             {
                 path: "/settings",
                 element: <Settings />,
+            },
+            {
+                path: "/ticket",
+                element: <Ticket />,
             },
         ],
     },

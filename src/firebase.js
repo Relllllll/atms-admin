@@ -1,6 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getDatabase, ref, onValue } from "firebase/database";
 import { getAnalytics } from "firebase/analytics";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -24,5 +25,19 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
 const auth = getAuth(app);
+const database = getDatabase(app);
+
+// Function to retrieve messages for admin
+const getMessagesForAdmin = () => {
+    const messagesRef = ref(database, 'adminMessages');
+    onValue(messagesRef, (snapshot) => {
+        const messages = snapshot.val();
+        // Handle received messages, you can update state, display in UI, etc.
+        console.log("Received Messages:", messages);
+    });
+};
+
+// Call the function to start listening for messages
+getMessagesForAdmin();
 
 export { auth };
