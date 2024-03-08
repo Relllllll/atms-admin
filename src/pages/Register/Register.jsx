@@ -10,6 +10,7 @@ import {
 } from "firebase/storage";
 import { auth } from "../../firebase";
 import { createWorker } from "tesseract.js";
+import Notification from "../../components/Notification/Notification";
 import "./Register.css";
 
 const Register = () => {
@@ -25,7 +26,7 @@ const Register = () => {
     const navigate = useNavigate();
     const idImageInputRef = useRef(null);
     const generalImageInputRef = useRef(null);
-    // const fileInputRef = useRef(null);
+    const imagePreviewRef = useRef(null);
 
     const storage = getStorage();
 
@@ -83,8 +84,23 @@ const Register = () => {
         age: "",
         image: null,
     });
+    const resetForm = () => {
+        setFormData({
+            firstName: "",
+            middleName: "",
+            lastName: "",
+            contactNum: "",
+            address: "",
+            age: "",
+            image: null,
+        });
+        setImageUrl(null);
+        setShowRegistrationForm(false);
+    };
 
     const [imageUrl, setImageUrl] = useState(null);
+    const [notification, setNotification] = useState("");
+    const closePopup = () => setNotification("");
 
     const handleSkipIDStep = () => {
         setShowRegistrationForm(true);
@@ -107,10 +123,53 @@ const Register = () => {
         }
     };
 
-    const handleImageChange = (event) => {
+    const handleImageChange = async (event) => {
         const file = event.target.files[0];
         setImageUrl(URL.createObjectURL(file));
         formData.image = file; // Update formData for submission
+        const blob = await resizeImage(file);
+        setImageUrl(URL.createObjectURL(blob));
+    };
+
+    const resizeImage = async (file) => {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (event) => {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement("canvas");
+                    const ctx = canvas.getContext("2d");
+
+                    const maxWidth = 400; // Set your desired max width
+                    const maxHeight = 400; // Set your desired max height
+
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > maxWidth) {
+                            height *= maxWidth / width;
+                            width = maxWidth;
+                        }
+                    } else {
+                        if (height > maxHeight) {
+                            width *= maxHeight / height;
+                            height = maxHeight;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+
+                    ctx.drawImage(img, 0, 0, width, height);
+                    canvas.toBlob((blob) => {
+                        resolve(blob);
+                    }, file.type);
+                };
+            };
+        });
     };
 
     const handleDragOver = (event) => {
@@ -129,36 +188,6 @@ const Register = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
-        // try {
-        //     const storageRef = ref(
-        //         storage,
-        //         `images/${formData.lastName}_${formData.firstName}`
-        //     );
-        //     await uploadBytes(storageRef, formData.image);
-
-        //     const downloadURL = await getDownloadURL(storageRef);
-
-        //     const database = getDatabase();
-        //     const newEmployeeKey = push(ref(database, "employees")).key;
-        //     const newEmployeeRef = ref(database, `employees/${newEmployeeKey}`);
-
-        //     const formDataWithImage = new FormData();
-        //     formDataWithImage.append("image", formData.image);
-
-        //     // Add other form fields to the FormData object
-        //     Object.entries(formData).forEach(([key, value]) => {
-        //         if (key !== "image") {
-        //             formDataWithImage.append(key, value);
-        //         }
-        //     });
-
-        //     await set(newEmployeeRef, Object.fromEntries(formDataWithImage));
-
-        //     console.log("Employee data submitted successfully!");
-        // } catch (error) {
-        //     console.error("Error submitting!", error);
-        // }
 
         try {
             if (formData.image) {
@@ -182,6 +211,8 @@ const Register = () => {
                 };
 
                 await set(newEmployeeRef, dataToSubmit);
+                setNotification("Registration successful");
+                resetForm();
 
                 console.log("Employee data submitted successfully");
             } else {
@@ -194,6 +225,7 @@ const Register = () => {
 
     return (
         <div className="register main">
+            <Notification notification={notification} closePopup={closePopup} />
             {!showRegistrationForm ? (
                 <>
                 <h1 className="register__title">Register - Upload ID</h1>
@@ -345,10 +377,24 @@ const Register = () => {
                                     }
                                 >
                                     
-                                    <img
-                                        className="register__image-upload-plus"
-                                        src="/image-gallery.png"
-                                    />
+                                    {imageUrl ? (
+                                        <div className="register__image-preview">
+                                            <img
+                                                className="register__image-previewImg"
+                                                src={imageUrl}
+                                                alt="Uploaded ID Image"
+                                            />
+                                        </div>
+                                    ) : (
+                                        <div className="register__image-upload-container">
+                                            <img
+                                                className="register__image-upload-plus"
+                                                src="/image-gallery.png"
+                                                alt="Default Image"
+                                            />
+                                        </div>
+                                    )}
+
                                     <input
                                         type="file"
                                         id="image-input"
@@ -359,16 +405,6 @@ const Register = () => {
                                     />
                                 </div>
                             </div>
-
-                            {imageUrl && (
-                                <div className="register__image-preview">
-                                    <img
-                                        className="register__image-previewImg"
-                                        src={imageUrl}
-                                        alt="Uploaded ID Image"
-                                    />
-                                </div>
-                            )}
 
                             {/* <input
                     type="file"
