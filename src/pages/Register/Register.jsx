@@ -30,51 +30,6 @@ const Register = () => {
 
     const storage = getStorage();
 
-    const uploadToImageStorage = async (file, employeeName) => {
-        const storageReference = storageRef(
-            storage,
-            `images/${employeeName}_${file.name}`
-        );
-
-        const uploadTaskSnapshot = await uploadBytes(storageReference, file);
-        const downloadURL = await getDownloadURL(uploadTaskSnapshot.ref);
-
-        return downloadURL;
-    };
-
-    useEffect(() => {
-        const workerInitialization = async () => {
-            const worker = await createWorker();
-            return worker;
-        };
-
-        const convertImageToText = async () => {
-            if (!selectedID) return;
-            const worker = await workerInitialization();
-            const { data } = await worker.recognize(selectedID);
-
-            setTextResult(data.text);
-            const lines = data.text.split("\n");
-            setExtractedLines(lines);
-            console.log("Extracted Lines:", extractedLines);
-
-            // adjustable
-            if (lines.length >= 5) {
-                setResultInputText(lines[3]);
-                console.log("Selected Line:", lines[3]);
-            }
-            await worker.terminate();
-        };
-
-        convertImageToText();
-    }, [selectedID]);
-
-    useEffect(() => {
-        if (!user) {
-            navigate("/");
-        }
-    }, [user, navigate]);
-
     const [formData, setFormData] = useState({
         firstName: "",
         middleName: "",
@@ -97,6 +52,79 @@ const Register = () => {
         setImageUrl(null);
         setShowRegistrationForm(false);
     };
+
+    const uploadToImageStorage = async (file, employeeName) => {
+        const storageReference = storageRef(
+            storage,
+            `images/${employeeName}_${file.name}`
+        );
+
+        const uploadTaskSnapshot = await uploadBytes(storageReference, file);
+        const downloadURL = await getDownloadURL(uploadTaskSnapshot.ref);
+
+        return downloadURL;
+    };
+
+    useEffect(() => {
+        const workerInitialization = async () => {
+            const worker = await createWorker();
+            return worker;
+        };
+
+        const convertImageToText = async () => {
+            if (!selectedID) return;
+            const worker = await workerInitialization();
+            const { data } = await worker.recognize(selectedID);
+            
+            setTextResult(data.text);
+            const lines = data.text.split("\n").map(line => line.replace(/[^a-zA-Z\s]/g, ''));
+            const filteredLines = lines.filter(line => line.trim() !== ''); // Remove empty lines
+            setExtractedLines(filteredLines);
+            console.log("Extracted Lines:", filteredLines);
+        
+            // adjustable
+            if (filteredLines.length > 0) {
+                // Splitting the filtered line into four parts
+                let parts = filteredLines[6].split(' ');
+            
+                // Checking if there are at least four parts
+                if (parts.length >= 4) {
+                    // Assuming you want to assign each part to a different variable
+                    let part1 = parts[0];
+                    let part2 = parts[1];
+                    let part3 = parts[2];
+                    let part4 = parts[3];
+                    // Now you can use these parts as required
+                    console.log("Part 1:", part1);
+                    console.log("Part 2:", part2);
+                    console.log("Part 3:", part3);
+                    console.log("Part 4:", part4);
+
+                    // Set form data here
+                    setFormData({
+                        ...formData,
+                        lastName: part1,
+                        firstName: `${part2} ${part3}`,
+                        middleName: part4,
+                        // Assuming you wanted to set lastName twice, adjust as needed
+                    });
+                } else {
+                    console.log("Filtered line doesn't have enough parts to split into four.");
+                }
+            }
+            await worker.terminate();
+        };
+
+        convertImageToText();
+    }, [selectedID, formData]); 
+
+    useEffect(() => {
+        if (!user) {
+            navigate("/");
+        }
+    }, [user, navigate]);
+
+    
 
     const [imageUrl, setImageUrl] = useState(null);
     const [notification, setNotification] = useState("");

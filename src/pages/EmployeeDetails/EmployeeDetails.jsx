@@ -53,12 +53,22 @@ const EmployeeDetails = () => {
     };
 
     const getStatusForToday = (logsArray) => {
+        // Sort logsArray by date in descending order
+        logsArray.sort((a, b) => new Date(b.date) - new Date(a.date));
+    
+        // Get the most recent log entry
+        const mostRecentLog = logsArray[0];
+    
+        // Get today's date in YYYY-MM-DD format
         const today = new Date().toISOString().split("T")[0];
-        const todayLog = logsArray.find((log) => log.date === today);
-
-        return todayLog ? todayLog.status : "-----";
+    
+        // Check if the most recent log entry date is today
+        if (mostRecentLog.date === today) {
+            return mostRecentLog.status;
+        } else {
+            return "-----";
+        }
     };
-
     // Function to calculate total hours and days
     const calculateTotalStats = () => {
         let totalHours = 0;
