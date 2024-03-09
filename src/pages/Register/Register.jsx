@@ -52,16 +52,17 @@ const Register = () => {
             if (!selectedID) return;
             const worker = await workerInitialization();
             const { data } = await worker.recognize(selectedID);
-
+            
             setTextResult(data.text);
-            const lines = data.text.split("\n");
-            setExtractedLines(lines);
-            console.log("Extracted Lines:", extractedLines);
-
+            const lines = data.text.split("\n").map(line => line.replace(/[^a-zA-Z\s]/g, ''));
+            const filteredLines = lines.filter(line => line.trim() !== ''); // Remove empty lines
+            setExtractedLines(filteredLines);
+            console.log("Extracted Lines:", filteredLines);
+        
             // adjustable
-            if (lines.length >= 5) {
-                setResultInputText(lines[3]);
-                console.log("Selected Line:", lines[3]);
+            if (filteredLines.length > 0) {
+                setResultInputText(filteredLines[10]);
+                console.log("Selected Line:", filteredLines[3]);
             }
             await worker.terminate();
         };
