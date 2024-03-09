@@ -30,6 +30,29 @@ const Register = () => {
 
     const storage = getStorage();
 
+    const [formData, setFormData] = useState({
+        firstName: "",
+        middleName: "",
+        lastName: "",
+        contactNum: "",
+        address: "",
+        age: "",
+        image: null,
+    });
+    const resetForm = () => {
+        setFormData({
+            firstName: "",
+            middleName: "",
+            lastName: "",
+            contactNum: "",
+            address: "",
+            age: "",
+            image: null,
+        });
+        setImageUrl(null);
+        setShowRegistrationForm(false);
+    };
+
     const uploadToImageStorage = async (file, employeeName) => {
         const storageReference = storageRef(
             storage,
@@ -61,14 +84,39 @@ const Register = () => {
         
             // adjustable
             if (filteredLines.length > 0) {
-                setResultInputText(filteredLines[10]);
-                console.log("Selected Line:", filteredLines[3]);
+                // Splitting the filtered line into four parts
+                let parts = filteredLines[6].split(' ');
+            
+                // Checking if there are at least four parts
+                if (parts.length >= 4) {
+                    // Assuming you want to assign each part to a different variable
+                    let part1 = parts[0];
+                    let part2 = parts[1];
+                    let part3 = parts[2];
+                    let part4 = parts[3];
+                    // Now you can use these parts as required
+                    console.log("Part 1:", part1);
+                    console.log("Part 2:", part2);
+                    console.log("Part 3:", part3);
+                    console.log("Part 4:", part4);
+
+                    // Set form data here
+                    setFormData({
+                        ...formData,
+                        lastName: part1,
+                        firstName: `${part2} ${part3}`,
+                        middleName: part4,
+                        // Assuming you wanted to set lastName twice, adjust as needed
+                    });
+                } else {
+                    console.log("Filtered line doesn't have enough parts to split into four.");
+                }
             }
             await worker.terminate();
         };
 
         convertImageToText();
-    }, [selectedID]);
+    }, [selectedID, formData]); 
 
     useEffect(() => {
         if (!user) {
@@ -76,28 +124,7 @@ const Register = () => {
         }
     }, [user, navigate]);
 
-    const [formData, setFormData] = useState({
-        firstName: "",
-        middleName: "",
-        lastName: "",
-        contactNum: "",
-        address: "",
-        age: "",
-        image: null,
-    });
-    const resetForm = () => {
-        setFormData({
-            firstName: "",
-            middleName: "",
-            lastName: "",
-            contactNum: "",
-            address: "",
-            age: "",
-            image: null,
-        });
-        setImageUrl(null);
-        setShowRegistrationForm(false);
-    };
+    
 
     const [imageUrl, setImageUrl] = useState(null);
     const [notification, setNotification] = useState("");
