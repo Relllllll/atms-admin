@@ -1,4 +1,4 @@
-// MessageList.js
+
 import React, { useState, useEffect } from "react";
 import { getDatabase, ref, onValue } from "firebase/database";
 import "./Ticket.css";
@@ -32,7 +32,8 @@ const Ticket = () => {
             <thead className="ticket__table-header">
                         <tr>
                             <th>No. </th>
-                            <th>Name </th>
+                            <th>date</th>
+                            <th>Id Number </th>
                             <th>Message</th>
                         </tr>
                     </thead>
@@ -40,6 +41,7 @@ const Ticket = () => {
                     {messages.map((message, index) => (
                     <tr key={index}>
                         <td>{index + 1}</td>
+                        <td>{new Date(message.timestamp).toLocaleDateString()}</td>
                         <td>{message.name}</td>
                         <td>{message.message}</td>
                         

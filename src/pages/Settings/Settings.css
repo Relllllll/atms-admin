@@ -60,13 +60,4 @@
     border-radius: 2rem;
     font-weight: 700;
 }
-.settings__download-button{
-    
-    color: var(--clr-dark-blue);
-    background-color: var(--clr-primary);
-    font-size: var(--size-lg);
-    width: 15rem;
-    padding: 0.5rem;
-    border-radius: 2rem;
-    font-weight: 700;
-}
+

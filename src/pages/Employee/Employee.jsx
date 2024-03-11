@@ -50,11 +50,13 @@ const Employee = () => {
     const searchEmployees = Object.values(employees).filter((employee) => {
         if (!searchInput) return true; //Return all
 
+        const idNumber = `${employee.idNumber}`
         const searchTerm = searchInput.toLowerCase();
         const fullName = `${employee.lastName.toLowerCase()} ${employee.firstName.toLowerCase()} ${
-            employee.middleName?.toLowerCase() || ""
-        }`;
-        return fullName.includes(searchTerm);
+            employee.middleName?.toLowerCase() || ""}`;
+        
+        return fullName.includes(searchTerm) || idNumber.includes(searchTerm);
+        
     });
     return (
         <div className="main employee">
@@ -91,6 +93,7 @@ const Employee = () => {
                         <thead className="employee__table-header">
                             <tr>
                                 <th>No.</th>
+                                <th>Id Number</th>
                                 <th>Name</th>
                                 <th>Contact #</th>
                                 <th>Status Today</th>
@@ -122,6 +125,7 @@ const Employee = () => {
                                             key={employee.key}
                                         >
                                             <td>{index + 1}</td>
+                                            <td>{employee.idNumber}</td>
                                             <td>
                                                 <Link
                                                     to={`/employee-details/${employee.id}`}
