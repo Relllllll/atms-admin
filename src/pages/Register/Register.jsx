@@ -31,6 +31,7 @@ const Register = () => {
     const storage = getStorage();
 
     const [formData, setFormData] = useState({
+        idNumber: "",
         firstName: "",
         middleName: "",
         lastName: "",
@@ -41,6 +42,7 @@ const Register = () => {
     });
     const resetForm = () => {
         setFormData({
+            idNumber: "",
             firstName: "",
             middleName: "",
             lastName: "",
@@ -81,6 +83,7 @@ const Register = () => {
             const filteredLines = lines.filter(line => line.trim() !== ''); // Remove empty lines
             setExtractedLines(filteredLines);
             console.log("Extracted Lines:", filteredLines);
+            await worker.terminate();
         
             // adjustable
             if (filteredLines.length > 0) {
@@ -116,7 +119,7 @@ const Register = () => {
         };
 
         convertImageToText();
-    }, [selectedID, formData]); 
+    }, [selectedID]); 
 
     useEffect(() => {
         if (!user) {
@@ -287,6 +290,24 @@ const Register = () => {
                     <>
                         <h1 className="register__title">Register</h1>
                         <div className="register__inputs-container">
+                        <div className="register__input-wrapper">
+                                <label
+                                    className="register__input-label"
+                                    htmlFor="firstName"
+                                >
+                                    Id Number{" "}
+                                </label>
+                                <input
+                                    className="register__input-inputBox"
+                                    type="text"
+                                    id="idNumber"
+                                    name="idNumber"
+                                    placeholder="Enter Id Number..."
+                                    value={formData.idNumber}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </div>
                             <div className="register__input-wrapper">
                                 <label
                                     className="register__input-label"
@@ -353,7 +374,7 @@ const Register = () => {
                                     id="age"
                                     name="age"
                                     placeholder="Age"
-                                    value={formData.age}
+                                    // value={formData.age}
                                     onChange={handleInputChange}
                                     required
                                 />
@@ -371,7 +392,7 @@ const Register = () => {
                                     id="contactNum"
                                     name="contactNum"
                                     placeholder="Enter contact number..."
-                                    value={formData.contactNum}
+                                    // value={formData.contactNum}
                                     onChange={handleInputChange}
                                     required
                                 />
@@ -389,7 +410,7 @@ const Register = () => {
                                     id="address"
                                     name="address"
                                     placeholder="Enter address..."
-                                    value={formData.address}
+                                    // value={formData.address}
                                     onChange={handleInputChange}
                                     required
                                 />

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { getDatabase, ref, onValue, update } from "firebase/database";
+import { getDatabase, ref, onValue, update, push, set, get } from "firebase/database";
 import "./EmployeeDetails.css";
 
 const EmployeeDetails = () => {
@@ -10,6 +10,10 @@ const EmployeeDetails = () => {
     const [statusToday, setStatusToday] = useState(null);
     const [userId, setUserId] = useState(null);
     const [editMode, setEditMode] = useState(false);
+    const [addMode, setAddMode] = useState(false);
+    const [selectedDate, setSelectedDate] = useState(""); // State to store the selected date
+    const [timeIn, setTimeIn] = useState("");
+    const [timeOut, setTimeOut] = useState("");
 
     useEffect(() => {
         const recognizedUserId =
@@ -69,6 +73,7 @@ const EmployeeDetails = () => {
             return "-----";
         }
     };
+
     // Function to calculate total hours and days
     const calculateTotalStats = () => {
         let totalHours = 0;
@@ -118,6 +123,38 @@ const EmployeeDetails = () => {
 
         setEditMode(false);
     };
+
+    const handleAddAttendance = async () => {
+        if (!selectedDate || !timeIn) {
+            // If required fields are missing, return
+            return;
+        }
+    
+        try {
+            const database = getDatabase();
+            const attendanceRef = ref(database, `employees/${userId}/attendance/${selectedDate}`);
+    
+            // Push new attendance data without appending the selectedDate
+            await set(attendanceRef, {
+                 
+                    status: "Present",
+                    timeIn: selectedDate + 'T' + timeIn,
+                    timeOut: selectedDate + 'T' + timeOut
+                
+            });
+    
+            setAddMode(false);
+        } catch (error) {
+            console.error("Error adding attendance:", error);
+            // Handle error if needed
+        }
+    };
+    
+    
+    
+    
+    
+    
 
     return (
         <div className="main">
@@ -275,13 +312,13 @@ const EmployeeDetails = () => {
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
                                 viewBox="0 0 24 24"
-                                stroke-width="1.5"
+                                strokeWidth="1.5"
                                 stroke="currentColor"
                                 className="employeeDetails__stats-icon"
                             >
                                 <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
                                     d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15M12 9l3 3m0 0-3 3m3-3H2.25"
                                 />
                             </svg>
@@ -301,13 +338,13 @@ const EmployeeDetails = () => {
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
                                 viewBox="0 0 24 24"
-                                stroke-width="1.5"
+                                strokeWidth="1.5"
                                 stroke="currentColor"
                                 className="employeeDetails__stats-icon"
                             >
                                 <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
                                     d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
                                 />
                             </svg>
@@ -327,30 +364,47 @@ const EmployeeDetails = () => {
 
             {attendanceLogs.length > 0 && (
                 <div className="employeeDetails__logs">
-                    <h2 className="employeeDetails__logs-title">
-                        Attendance History
-                    </h2>
-
+                    <div className="employeeDetails__logs-tittle-wrapper">
+    <h2 className="employeeDetails__logs-title">
+        Attendance History
+    </h2>
+    {!addMode && (
+        <button
+            className="employeeDetails__title-edit"
+            onClick={() => setAddMode(true)} // Set addMode to true when clicked
+        >
+            Add
+        </button>
+    )}
+    {editMode && (
+        <button
+            className="employeeDetails__title-edit"
+            onClick={handleUpdateEmployee}
+        >
+            Update
+        </button>
+    )}
+</div>
                     <div className="employeeDetails__logs-container">
                         {attendanceLogs.map((log) => (
                             <div
-                                className={`employeeDetails__logs-box employeeDetails__logs-box-${log.status.toLowerCase()}`}
-                                key={log.date}
-                            >
-                                <div className="employeeDetails__logs-top">
-                                    <p className="employeeDetails__logs-date">
-                                        {formatDate(log.date)}
-                                    </p>
-                                    <p
-                                        className={`employeeDetails__logs-status employeeDetails__logs-status-${log.status.toLowerCase()}`}
-                                    >
-                                        <span className="employeeDetails__logs-status-bullet">
-                                            &#8226;
-                                        </span>
-                                        {log.status}
-                                    </p>
-                                </div>
-                                <div className="employeeDetails__logs-bot">
+                            className={`employeeDetails__logs-box employeeDetails__logs-box-${log.status ? log.status.toLowerCase() : ''}`}
+                            key={log.date}
+                        >
+                            <div className="employeeDetails__logs-top">
+                                <p className="employeeDetails__logs-date">
+                                    {formatDate(log.date)}
+                                </p>
+                                <p
+                                    className={`employeeDetails__logs-status employeeDetails__logs-status-${log.status ? log.status.toLowerCase() : ''}`}
+                                >
+                                    <span className="employeeDetails__logs-status-bullet">
+                                        &#8226;
+                                    </span>
+                                    {log.status}
+                                </p>
+                            </div>
+                            <div className="employeeDetails__logs-bot">
                                     {log.timeIn ? (
                                         <div className="employeeDetails__logs-time-container">
                                             <p className="employeeDetails__logs-time-title">
@@ -399,6 +453,33 @@ const EmployeeDetails = () => {
                     </div>
                 </div>
             )}
+
+{addMode && (
+    <div className="employeeDetails__add-attendance">
+        <h2 className="employeeDetails__add-attendance-title">Add Attendance</h2>
+        <input
+            type="date"
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
+        />
+        <input
+            type="time"
+            value={timeIn}
+            onChange={(e) => setTimeIn(e.target.value)}
+        />
+        <input
+            type="time"
+            value={timeOut}
+            onChange={(e) => setTimeOut(e.target.value)}
+        />
+        <button
+            className="employeeDetails__add-attendance-button"
+            onClick={handleAddAttendance}
+        >
+            Add Attendance
+        </button>
+    </div>
+)}
         </div>
     );
 };
