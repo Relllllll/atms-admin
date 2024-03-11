@@ -374,7 +374,10 @@ const Register = () => {
                                     id="age"
                                     name="age"
                                     placeholder="Age"
-                                    // value={formData.age}
+
+
+                                     value={formData.age} 
+
                                     onChange={handleInputChange}
                                     required
                                 />
@@ -392,7 +395,10 @@ const Register = () => {
                                     id="contactNum"
                                     name="contactNum"
                                     placeholder="Enter contact number..."
-                                    // value={formData.contactNum}
+
+
+                                     value={formData.contactNum} 
+
                                     onChange={handleInputChange}
                                     required
                                 />
@@ -410,7 +416,9 @@ const Register = () => {
                                     id="address"
                                     name="address"
                                     placeholder="Enter address..."
-                                    // value={formData.address}
+
+                                    value={formData.address} 
+
                                     onChange={handleInputChange}
                                     required
                                 />
