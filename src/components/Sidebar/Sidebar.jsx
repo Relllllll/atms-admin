@@ -5,14 +5,6 @@ import { getDatabase, ref, onValue } from "firebase/database";
 import logo from "/logo.png";
 import "./Sidebar.css";
 
-
-import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { getAuth, signOut } from "firebase/auth";
-import { getDatabase, ref, onValue } from "firebase/database";
-import logo from "/logo.png";
-import "./Sidebar.css";
-
 const Sidebar = () => {
     const auth = getAuth();
     const navigate = useNavigate();
