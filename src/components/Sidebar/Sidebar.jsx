@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
 import { getDatabase, ref, onValue } from "firebase/database";
-import logo from "/logo.png";
+import logo from "/logo.webp";
+
 import "./Sidebar.css";
 
 const Sidebar = () => {
@@ -117,7 +118,7 @@ const Sidebar = () => {
                     />
                 </svg>
                 <p className="sidebar__menu-item">Report</p>
-                    {unreadMessages && <span className="notification-dot"></span>} {/* Display red dot notification */}
+                    {unreadMessages && <span className="notification-dot"></span>}
                 </Link>
             </div>
 
