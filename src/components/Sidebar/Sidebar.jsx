@@ -1,13 +1,38 @@
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
+import { getDatabase, ref, onValue } from "firebase/database";
+import logo from "/logo.png";
+import "./Sidebar.css";
+
+
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { getAuth, signOut } from "firebase/auth";
+import { getDatabase, ref, onValue } from "firebase/database";
 import logo from "/logo.png";
 import "./Sidebar.css";
 
 const Sidebar = () => {
     const auth = getAuth();
     const navigate = useNavigate();
+    const [unreadMessages, setUnreadMessages] = useState(false); // State to track unread messages
+
+    useEffect(() => {
+        const messagesRef = ref(getDatabase(), "ticketMessages");
+        onValue(messagesRef, (snapshot) => {
+            const messagesData = snapshot.val();
+            if (messagesData) {
+                const unread = Object.values(messagesData).some(message => !message.read); // Check if there are unread messages
+                setUnreadMessages(unread);
+            } else {
+                setUnreadMessages(false);
+            }
+        });
+    }, []);
 
     const handleSignOut = () => {
+        localStorage.removeItem('sessionToken');
         signOut(auth)
             .then(() => {
                 navigate("/");
@@ -16,6 +41,7 @@ const Sidebar = () => {
                 console.log(error);
             });
     };
+
 
     return (
         <sidebar className="sidebar">
@@ -98,8 +124,8 @@ const Sidebar = () => {
                     d="M14 13q.6 0 1.088-.325t.737-.875q.075-.35.35-.575T16.8 11H20V4H8v7h3.2q.35 0 .625.213t.35.562q.125.6.65.913T14 13m-6 5q-.825 0-1.412-.587T6 16V4q0-.825.588-1.412T8 2h12q.825 0 1.413.588T22 4v12q0 .825-.587 1.413T20 18zm-4 4q-.825 0-1.412-.587T2 20V7q0-.425.288-.712T3 6q.425 0 .713.288T4 7v13h13q.425 0 .713.288T18 21q0 .425-.288.713T17 22z"
                     />
                 </svg>
-                    <p className="sidebar__menu-item">Message <br />
-                    Inbox</p>
+                <p className="sidebar__menu-item">Report</p>
+                    {unreadMessages && <span className="notification-dot"></span>} {/* Display red dot notification */}
                 </Link>
             </div>
 

@@ -70,3 +70,12 @@
     font-size: 1rem;
     font-weight: 600;
 }
+.notification-dot {
+    width: 8px;
+    height: 8px;
+    background-color: red;
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 5px; /* Adjust margin as needed */
+  }
+  
