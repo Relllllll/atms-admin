@@ -57,3 +57,6 @@
     font-weight: 600;
     background-color: var(--clr-light-gray);
 }
+.ticket__table-body .read {
+    color: #999; /* Lighten the font color for read messages */
+}
