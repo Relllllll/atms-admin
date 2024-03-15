@@ -196,3 +196,12 @@
   .download-button:hover {
     background-color: #0056b3;
   }
+  .pagination{
+    justify-content: center;
+    display: flex;
+    flex-direction: row;
+  }
+  .prev,.next,.page
+  {
+    margin: 0.5rem;
+  }

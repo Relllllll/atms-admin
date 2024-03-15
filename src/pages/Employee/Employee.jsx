@@ -8,6 +8,7 @@ import {
     query,
     orderByChild,
     equalTo,
+    push,
 } from "firebase/database";
 import { auth } from "../../firebase";
 import "./Employee.css";
@@ -17,6 +18,8 @@ const Employee = () => {
     const [searchInput, setSearchInput] = useState("");
     const [user] = useAuthState(auth);
     const navigate = useNavigate();
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
 
     useEffect(() => {
         if (!user) {
@@ -28,22 +31,21 @@ const Employee = () => {
         const database = getDatabase();
         const employeesRef = ref(database, "employees");
 
-        const employeesQuery = query(employeesRef, orderByChild("lastName"));
+        const employeesQuery = query(employeesRef, orderByChild("idNumber"));
 
         onValue(
-            employeesRef,
+            employeesQuery,
             (snapshot) => {
                 const employeesData = snapshot.val();
-                // Convert object to array with id included
-                const employeesArray = Object.entries(employeesData).map(
-                    ([id, employee]) => ({
+                // Convert object to array with id included and sort by idNumber
+                const employeesArray = Object.entries(employeesData)
+                    .map(([id, employee]) => ({
                         id,
                         ...employee,
-                    })
-                );
+                    }))
+                    .sort((a, b) => a.idNumber.localeCompare(b.idNumber));
                 setEmployees(employeesArray);
-            },
-            { onlyOnce: true }
+            }
         );
     }, []); // Empty dependency array to run only once
 
@@ -58,6 +60,33 @@ const Employee = () => {
         return fullName.includes(searchTerm) || idNumber.includes(searchTerm);
         
     });
+
+    const handleEmployeeClick = (employeeName) => {
+        const clickTime = new Date().toISOString();
+        const database = getDatabase();
+        const logsRef = ref(database, "logs");
+        const logMessage = `Employee ${employeeName} details viewed`;
+        push(logsRef, { action: logMessage, time: clickTime });
+    };
+
+    // Get current employees
+    const indexOfLastEmployee = currentPage * itemsPerPage;
+    const indexOfFirstEmployee = indexOfLastEmployee - itemsPerPage;
+    const currentEmployees = searchEmployees.slice(indexOfFirstEmployee, indexOfLastEmployee);
+
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+    const handleNextPage = () => {
+        if (currentPage < Math.ceil(searchEmployees.length / itemsPerPage)) {
+            setCurrentPage(currentPage + 1);
+        }
+    };
+    
+    const handlePrevPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
+
     return (
         <div className="main employee">
             <div className="employee__searchBox-wrapper">
@@ -99,9 +128,9 @@ const Employee = () => {
                                 <th>Status Today</th>
                             </tr>
                         </thead>
-                        {searchEmployees.length > 0 ? (
+                        {currentEmployees.length > 0 && (
                             <tbody className="employee__table-body">
-                                {searchEmployees.map((employee, index) => {
+                                {currentEmployees.map((employee, index) => {
                                     const attendanceKeys = Object.keys(
                                         employee.attendance || {}
                                     );
@@ -129,6 +158,7 @@ const Employee = () => {
                                             <td>
                                                 <Link
                                                     to={`/employee-details/${employee.id}`}
+                                                    onClick={() => handleEmployeeClick(`${employee.firstName} ${employee.middleName} ${employee.lastName}`)}
                                                 >
                                                     {employee.firstName}{" "}
                                                     {employee.middleName}{" "}
@@ -147,11 +177,22 @@ const Employee = () => {
                                     );
                                 })}
                             </tbody>
-                        ) : (
-                            <></>
                         )}
                     </table>
                 </div>
+                {searchEmployees.length > itemsPerPage && (
+    <nav className="pagination">
+        <button className="prev" onClick={handlePrevPage} disabled={currentPage === 1}>
+            Previous
+        </button>
+        <span className="page"> 
+            Page {currentPage} of {Math.ceil(searchEmployees.length / itemsPerPage)}
+        </span>
+        <button className="name" onClick={handleNextPage} disabled={currentPage === Math.ceil(searchEmployees.length / itemsPerPage)}>
+            Next
+        </button>
+    </nav>
+)}
             </div>
         </div>
     );

@@ -99,7 +99,7 @@ const Sidebar = () => {
                             d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z"
                         />
                     </svg>
-                    <p className="sidebar__menu-item">Logs</p>
+                    <p className="sidebar__menu-item">Attendance Logs</p>
                 </Link>
                 <Link to="/ticket" className="sidebar__menu-link">
                 <svg 
@@ -118,6 +118,23 @@ const Sidebar = () => {
                 </svg>
                 <p className="sidebar__menu-item">Report</p>
                     {unreadMessages && <span className="notification-dot"></span>}
+                </Link>
+                <Link to="/activity-log" className="sidebar__menu-link">
+                <svg 
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="sidebar__menu-icon"
+                >
+                    <path 
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M7.998 2.478a.5.5 0 0 1-.453.542a5 5 0 1 0 5.435 5.435a.5.5 0 0 1 .996.09a6 6 0 1 1-6.52-6.52a.5.5 0 0 1 .542.453M7.5 5a.5.5 0 0 1 .5.5V8h1.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5m2.136-2.774a.5.5 0 1 0-.272.962c.547.155 1.057.4 1.511.72a.5.5 0 0 0 .576-.817a5.978 5.978 0 0 0-1.815-.865m3.273 2.323a.5.5 0 1 0-.818.576c.32.454.566.964.72 1.511a.5.5 0 0 0 .963-.272a5.977 5.977 0 0 0-.865-1.815"
+                    />
+                </svg>
+                <p className="sidebar__menu-item">Activity Logs</p>
                 </Link>
             </div>
 

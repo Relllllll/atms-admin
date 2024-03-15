@@ -7,6 +7,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import FadeLoader from "react-spinners/FadeLoader";
 import { auth } from "../../firebase";
+import { getDatabase, ref, get, set, push } from "firebase/database";
 import "./Login.css";
 
 const Login = () => {
@@ -21,16 +22,26 @@ const Login = () => {
         try {
             await setPersistence(auth, browserSessionPersistence);
             await signInWithEmailAndPassword(auth, email, password);
+            const loginTime = new Date().toISOString(); // Get the current date and time
+            const db = getDatabase(); // Get the database instance
+            const logRef = ref(db, "logs"); // Reference to the logs node in the database
+            await push(logRef, { action: `User logged in`, 
+                                    time: `${loginTime}`
+        }); // Push the login activity log to the database
             navigate("/employee-list");
         } catch (error) {
             console.error("Error logging in:", error);
             setErrorMessage("Invalid email or password!");
+            await push(logRef, { action: `Log in failed`, 
+                                    time: `${loginTime}`});
         } finally {
             setLoading(false);
         }
     };
 
+
     return (
+        
         <div className="login">
             <div className="login__background-image-container">
                 <img
@@ -120,6 +131,7 @@ const Login = () => {
                 </div>
             )}
         </div>
+        
     );
 };
 

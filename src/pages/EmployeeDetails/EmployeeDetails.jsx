@@ -136,7 +136,7 @@ const EmployeeDetails = () => {
     
             // Push new attendance data without appending the selectedDate
             await set(attendanceRef, {
-                 
+                
                     status: "Present",
                     timeIn: selectedDate + 'T' + timeIn,
                     timeOut: selectedDate + 'T' + timeOut
@@ -149,7 +149,22 @@ const EmployeeDetails = () => {
             // Handle error if needed
         }
     };
-    
+    const handleEmployeeEditClick = (employeeName) => {
+        const clickTime = new Date().toISOString();
+        const database = getDatabase();
+        const logsRef = ref(database, "logs");
+        const logMessage = `Employee ${employeeName} edit employee details`;
+        push(logsRef, { action: logMessage, time: clickTime });
+        setEditMode(true);
+    };
+    const handleAddClick = (employeeName) => {
+        const clickTime = new Date().toISOString();
+        const database = getDatabase();
+        const logsRef = ref(database, "logs");
+        const logMessage = `Employee ${employeeName}, admin add manual time`;
+        push(logsRef, { action: logMessage, time: clickTime });
+        setAddMode(true);
+    };
     
     
     
@@ -172,7 +187,7 @@ const EmployeeDetails = () => {
                 {!editMode && (
                     <button
                         className="employeeDetails__title-edit"
-                        onClick={() => setEditMode(true)}
+                        onClick={() => handleEmployeeEditClick(`${employeeData.firstName} ${employeeData.middleName} ${employeeData.lastName}`)}
                     >
                         Edit
                     </button>
@@ -371,19 +386,12 @@ const EmployeeDetails = () => {
     {!addMode && (
         <button
             className="employeeDetails__title-edit"
-            onClick={() => setAddMode(true)} // Set addMode to true when clicked
+            onClick={() =>handleAddClick(`${employeeData.firstName} ${employeeData.middleName} ${employeeData.lastName}`)} // Set addMode to true when clicked
         >
             Add
         </button>
     )}
-    {editMode && (
-        <button
-            className="employeeDetails__title-edit"
-            onClick={handleUpdateEmployee}
-        >
-            Update
-        </button>
-    )}
+    
 </div>
                     <div className="employeeDetails__logs-container">
                         {attendanceLogs.map((log) => (
