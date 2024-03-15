@@ -7,6 +7,7 @@ import Settings from "./pages/Settings/Settings.jsx";
 import Logs from "./pages/Logs/Logs.jsx";
 import EmployeeDetails from "./pages/EmployeeDetails/EmployeeDetails.jsx";
 import Ticket from "./pages/TIcket/Ticket.jsx";
+import ActivityLog from "./pages/ActivityLog/ActivityLog.jsx";
 
 const router = createBrowserRouter([
     {
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
             {
                 path: "/ticket",
                 element: <Ticket />,
+            },
+            {
+                path: "/activity-log",
+                element: <ActivityLog />,
             },
         ],
     },

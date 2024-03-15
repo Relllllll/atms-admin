@@ -218,6 +218,11 @@ const Register = () => {
     };
 
     const handleSubmit = async (event) => {
+        const clickTime = new Date().toISOString();
+        const database = getDatabase();
+        const logsRef = ref(database, "logs");
+        const logMessage = 'admin Registered an employee';
+        push(logsRef, { action: logMessage, time: clickTime });
         event.preventDefault();
 
         try {

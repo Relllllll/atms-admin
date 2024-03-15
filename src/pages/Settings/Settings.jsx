@@ -4,6 +4,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase";
 import { getAuth, updatePassword, reauthenticateWithCredential, EmailAuthProvider } from "firebase/auth";
 import Notification from "../../components/Notification/Notification";
+import { getDatabase, push, ref } from "firebase/database";
 import "./Settings.css";
 
 const Settings = () => {
@@ -21,6 +22,11 @@ const Settings = () => {
     }, [user, navigate]);
 
     const handleChangePassword = async () => {
+        const clickTime = new Date().toISOString();
+        const database = getDatabase();
+        const logsRef = ref(database, "logs");
+        const logMessage = 'Password Change';
+        push(logsRef, { action: logMessage, time: clickTime });
         try {
             const auth = getAuth();
             const user = auth.currentUser;

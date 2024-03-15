@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getDatabase, ref, onValue, update } from "firebase/database";
+import { getDatabase, ref, onValue, update, push } from "firebase/database";
 import "./Ticket.css";
 
 const Ticket = () => {
@@ -41,6 +41,11 @@ const Ticket = () => {
             // Check if there are any unread messages after toggling read status
             const unread = updatedMessages.some(message => !message.read);
             setUnreadMessages(unread);
+
+            // Log the action
+            const logRef = ref(getDatabase(), "logs");
+            const logMessage = `Message with ID ${messageId} marked as ${updatedMessages[messageIndex].read ? 'Read' : 'Unread'}`;
+            push(logRef, { action: logMessage, time: new Date().toISOString() });
         }
     };
 
