@@ -227,11 +227,11 @@ const Logs = () => {
         </table>
         <nav className="pagination">
           <button className="prev" disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>
-            Previous  
+            -  
           </button>
           <span className="page">Page {currentPage} of {Math.ceil(totalLogs / itemsPerPage)}</span>
           <button className="next" disabled={currentPage === Math.ceil(totalLogs / itemsPerPage)} onClick={() => handlePageChange(currentPage + 1)}>
-            Next
+            +
           </button>
         </nav>
       </div>

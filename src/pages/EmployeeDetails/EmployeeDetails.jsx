@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { getDatabase, ref, onValue, update, push, set, get } from "firebase/database";
+import jsPDF from "jspdf"
+import "jspdf-autotable";
 import "./EmployeeDetails.css";
 
 const EmployeeDetails = () => {
@@ -76,23 +78,48 @@ const EmployeeDetails = () => {
 
     // Function to calculate total hours and days
     const calculateTotalStats = () => {
-        let totalHours = 0;
+        let totalMilliseconds = 0;
         let totalDays = 0;
-
+    
         attendanceLogs.forEach((log) => {
             if (log.timeIn && log.timeOut) {
                 const timeIn = new Date(log.timeIn);
                 const timeOut = new Date(log.timeOut);
-                const hoursWorked = (timeOut - timeIn) / (1000 * 60 * 60); // Convert milliseconds to hours
-                totalHours += hoursWorked;
-                totalDays += 1;
+                const millisecondsWorked = timeOut - timeIn;
+                totalMilliseconds += millisecondsWorked;
+    
+                totalDays++;
             }
         });
+    
+        const totalSeconds = Math.floor(totalMilliseconds / 1000);
+        const totalHours = totalSeconds / 3600;
+    
+        const hours = Math.floor(totalHours);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+    
+        // Calculate remaining decimal part after subtracting whole hours
+        const remainingDecimalHours = totalHours - hours;
+        const decimalMinutes = Math.floor((remainingDecimalHours * 60) % 60);
+        const decimalSeconds = Math.floor((remainingDecimalHours * 3600) % 60);
+    
+        const formattedTotalTime = `${hours}:${minutes}:${seconds}`;
+        
+    
+        return {
+            totalHours: totalHours.toFixed(2),
+            totalDays,
+            hours,
+            minutes,
+            seconds,
+            formattedTotalTime: `${formattedTotalTime}.${decimalMinutes}${decimalSeconds}`, 
 
-        return { totalHours, totalDays };
+        };
     };
-
-    const { totalHours, totalDays } = calculateTotalStats();
+    
+    const { formattedTotalTime, totalDays } = calculateTotalStats();
+    const formattedTotalTimeWithoutDecimal = formattedTotalTime.split('.')[0];
 
     // Function to format the date
     const formatDate = (dateString) => {
@@ -165,11 +192,40 @@ const EmployeeDetails = () => {
         push(logsRef, { action: logMessage, time: clickTime });
         setAddMode(true);
     };
-    
-    
-    
-    
-    
+    const handleDownloadPersonalLog = () => {
+        // Create a new jsPDF instance
+        const doc = new jsPDF();
+        // Set the font size
+        doc.setFontSize(12);
+        // Add employee name to the PDF
+        doc.text(`Employee Name: ${employeeData.firstName} ${employeeData.middleName || ""} ${employeeData.lastName}`, 10, 10);
+
+        // Generate table data
+        const tableData = attendanceLogs.map(log => {
+            return [
+                formatDate(log.date),
+                log.status,
+                log.timeIn ? new Date(log.timeIn).toLocaleTimeString() : "-----",
+                log.timeOut ? new Date(log.timeOut).toLocaleTimeString() : "-----"
+            ];
+        });
+
+        // Generate table headers
+        const headers = ["Date", "Status", "Time In", "Time Out"];
+
+        // Add the autoTable plugin to generate a table
+        doc.autoTable({
+            startY: 20, // Start Y position for the table
+            head: [headers], // Table headers
+            body: tableData, // Table data
+            theme: "grid", // Table theme
+            styles: { fontSize: 12 }, // Table styles
+            columnStyles: { 0: { cellWidth: 40 } } // Adjust column width if necessary
+        });
+
+        // Trigger the download of the PDF
+        doc.save("personal_log.pdf");
+    };
 
     return (
         <div className="main">
@@ -184,6 +240,7 @@ const EmployeeDetails = () => {
             </div>
             <div className="employeeDetails__title-wrapper">
                 <h1 className="employeeDetails__title">Employee Details</h1>
+                <button className="download-personal-log" onClick={handleDownloadPersonalLog}>Download Personal Log</button>
                 {!editMode && (
                     <button
                         className="employeeDetails__title-edit"
@@ -200,6 +257,7 @@ const EmployeeDetails = () => {
                         Update
                     </button>
                 )}
+                
             </div>
             {employeeData && (
                 <div className="employee__details-parent">
@@ -363,11 +421,12 @@ const EmployeeDetails = () => {
                                     d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
                                 />
                             </svg>
-
+                                        
                             <div className="employeeDetails__stats-details-wrapper">
                                 <p className="employeeDetails__stats-details">
-                                    {totalHours.toFixed(2)} hrs
+                                    {formattedTotalTimeWithoutDecimal} 
                                 </p>
+                                <div className="timeFormat">HH:MM:SS</div>
                                 <p className="employeeDetails__stats-details-title">
                                     Total Hours
                                 </p>

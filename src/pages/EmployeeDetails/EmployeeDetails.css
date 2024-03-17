@@ -245,3 +245,16 @@
     color: var(--clr-dark-blue);
     font-weight: 600;
 }
+.timeFormat{
+    display: flex;
+    color: var(--clr-gray);
+    margin-top: -1.5rem;
+    margin-bottom: -1rem;
+}
+.download-personal-log{
+    background-color: var(--clr-primary);
+    padding: 0.5rem;
+    border-radius: 1rem;
+    color: var(--clr-dark-blue);
+    font-weight: 600;
+}
