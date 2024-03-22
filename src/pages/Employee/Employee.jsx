@@ -7,8 +7,8 @@ import {
     onValue,
     query,
     orderByChild,
-    equalTo,
     push,
+    get,
 } from "firebase/database";
 import { auth } from "../../firebase";
 import "./Employee.css";
@@ -37,7 +37,6 @@ const Employee = () => {
             employeesQuery,
             (snapshot) => {
                 const employeesData = snapshot.val();
-                // Convert object to array with id included and sort by idNumber
                 const employeesArray = Object.entries(employeesData)
                     .map(([id, employee]) => ({
                         id,
@@ -47,10 +46,30 @@ const Employee = () => {
                 setEmployees(employeesArray);
             }
         );
-    }, []); // Empty dependency array to run only once
+    }, []); 
+
+    useEffect(() => {
+        if (Array.isArray(employees) && employees.length > 0) {
+            const statusPromises = employees.map(employee => {
+                return handleStatusToday(employee.id, new Date().toISOString().split('T')[0]);
+            });
+    
+            Promise.all(statusPromises)
+                .then(statuses => {
+                    const updatedEmployees = employees.map((employee, index) => ({
+                        ...employee,
+                        statusToday: statuses[index]
+                    }));
+                    setEmployees(updatedEmployees);
+                })
+                .catch(error => {
+                    console.error("Error fetching statuses:", error);
+                });
+        }
+    }, [employees]);
 
     const searchEmployees = Object.values(employees).filter((employee) => {
-        if (!searchInput) return true; //Return all
+        if (!searchInput) return true;
 
         const idNumber = `${employee.idNumber}`
         const searchTerm = searchInput.toLowerCase();
@@ -58,7 +77,6 @@ const Employee = () => {
             employee.middleName?.toLowerCase() || ""}`;
         
         return fullName.includes(searchTerm) || idNumber.includes(searchTerm);
-        
     });
 
     const handleEmployeeClick = (employeeName) => {
@@ -69,7 +87,6 @@ const Employee = () => {
         push(logsRef, { action: logMessage, time: clickTime });
     };
 
-    // Get current employees
     const indexOfLastEmployee = currentPage * itemsPerPage;
     const indexOfFirstEmployee = indexOfLastEmployee - itemsPerPage;
     const currentEmployees = searchEmployees.slice(indexOfFirstEmployee, indexOfLastEmployee);
@@ -85,6 +102,47 @@ const Employee = () => {
         if (currentPage > 1) {
             setCurrentPage(currentPage - 1);
         }
+    };
+
+    const handleStatusToday = (userId, date) => {
+        const database = getDatabase();
+        const attendanceRef = ref(database, `employees/${userId}/attendance`);
+    
+        return get(attendanceRef)
+            .then((snapshot) => {
+                const attendanceData = snapshot.val();
+    
+                if (attendanceData) {
+                    const dates = Object.keys(attendanceData || {}).map(dateString => {
+                        const date = new Date(dateString);
+                        return isNaN(date.getTime()) ? null : date;
+                    }).filter(date => date !== null);
+                
+                    dates.sort((a, b) => {
+                        if (!a) return 1;
+                        if (!b) return -1;
+                        return a.getTime() - b.getTime();
+                    });
+                
+                    const lastAttendanceDate = dates[dates.length - 1];
+                
+                    const lastAttendance = new Date(lastAttendanceDate);
+                    const dateToday = new Date(date);
+                
+                    let statusToday = "Absent";
+                    if (dateToday.toDateString() === lastAttendance.toDateString()) {
+                        statusToday = "Present";
+                    }
+    
+                    return statusToday;
+                } else {
+                    return "Absent";
+                }
+            })
+            .catch((error) => {
+                console.error("Error fetching attendance data: ", error);
+                return "Absent";
+            });
     };
 
     return (
@@ -131,22 +189,7 @@ const Employee = () => {
                         {currentEmployees.length > 0 && (
                             <tbody className="employee__table-body">
                                 {currentEmployees.map((employee, index) => {
-                                    const attendanceKeys = Object.keys(
-                                        employee.attendance || {}
-                                    );
-                                    const latestAttendanceKey =
-                                        attendanceKeys[
-                                            attendanceKeys.length - 1
-                                        ];
-                                    const latestAttendance =
-                                        employee.attendance?.[
-                                            latestAttendanceKey
-                                        ] || {};
-                                    const latestAttendanceStatus =
-                                        latestAttendance.status || "-----";
-
-                                    const statusClass =
-                                        latestAttendanceStatus.toLowerCase();
+                                    const latestAttendanceStatus = employee.statusToday || "Absent";
 
                                     return (
                                         <tr
@@ -168,7 +211,7 @@ const Employee = () => {
                                             <td>{employee.contactNum}</td>
                                             <td>
                                                 <span
-                                                    className={latestAttendanceStatus.toLowerCase()}
+                                                    className={latestAttendanceStatus}
                                                 >
                                                     {latestAttendanceStatus}
                                                 </span>
@@ -181,18 +224,18 @@ const Employee = () => {
                     </table>
                 </div>
                 {searchEmployees.length > itemsPerPage && (
-    <nav className="pagination">
-        <button className="prev" onClick={handlePrevPage} disabled={currentPage === 1}>
-            Previous
-        </button>
-        <span className="page"> 
-            Page {currentPage} of {Math.ceil(searchEmployees.length / itemsPerPage)}
-        </span>
-        <button className="name" onClick={handleNextPage} disabled={currentPage === Math.ceil(searchEmployees.length / itemsPerPage)}>
-            Next
-        </button>
-    </nav>
-)}
+                    <nav className="pagination">
+                        <button className="prev" onClick={handlePrevPage} disabled={currentPage === 1}>
+                            Previous
+                        </button>
+                        <span className="page"> 
+                            Page {currentPage} of {Math.ceil(searchEmployees.length / itemsPerPage)}
+                        </span>
+                        <button className="name" onClick={handleNextPage} disabled={currentPage === Math.ceil(searchEmployees.length / itemsPerPage)}>
+                            Next
+                        </button>
+                    </nav>
+                )}
             </div>
         </div>
     );
