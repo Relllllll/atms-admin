@@ -215,6 +215,10 @@
     color: var(--clr-green);
     background-color: var(--clr-light-green);
 }
+.employeeDetails__logs-status-absent{
+    color: var(--clr-red);
+    background-color: var(--clr-light-red);
+}
 
 .employeeDetails__logs-status-late {
     background-color: var(--clr-light-red);
@@ -257,4 +261,13 @@
     border-radius: 1rem;
     color: var(--clr-dark-blue);
     font-weight: 600;
+}
+.pagination{
+    justify-content: center;
+    display: flex;
+    flex-direction: row;
+}
+.prev,.next,.page
+{
+    margin: 0.5rem;
 }

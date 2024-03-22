@@ -38,6 +38,8 @@ const ActivityLog = ({ loggedActions }) => {
                 logEntries.push(childSnapshot.val());
             });
 
+            logEntries.sort((a, b) => new Date(b.time) - new Date(a.time));
+
             setTotalLogs(logEntries.length); // Set total logs count
             setLogs(logEntries);
         };

@@ -87,18 +87,20 @@
     background-color: var(--clr-light-gray);
 }
 
-.present {
+.Present {
     color: var(--clr-green);
     background-color: var(--clr-light-green);
 }
 
-.late {
+.late,
+.Absent {
     color: var(--clr-red);
     background-color: var(--clr-light-red);
 }
 
-.present,
-.late {
+.Present,
+.Late,
+.Absent {
     padding: 0.8rem;
     border-radius: 1rem;
 }
