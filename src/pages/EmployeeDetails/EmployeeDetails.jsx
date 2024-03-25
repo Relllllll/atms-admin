@@ -1,7 +1,15 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { getDatabase, ref, onValue, update, push, set, get } from "firebase/database";
-import jsPDF from "jspdf"
+import {
+    getDatabase,
+    ref,
+    onValue,
+    update,
+    push,
+    set,
+    get,
+} from "firebase/database";
+import jsPDF from "jspdf";
 import "jspdf-autotable";
 import "./EmployeeDetails.css";
 
@@ -17,7 +25,7 @@ const EmployeeDetails = () => {
     const [timeIn, setTimeIn] = useState("");
     const [timeOut, setTimeOut] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [itemsPerPage, setItemsPerPage] = useState(9);
 
     useEffect(() => {
         const recognizedUserId =
@@ -28,7 +36,6 @@ const EmployeeDetails = () => {
             fetchEmployeeData(recognizedUserId);
         }
     }, [location.pathname]);
-
 
     const fetchEmployeeData = (userId) => {
         try {
@@ -64,13 +71,13 @@ const EmployeeDetails = () => {
     const getStatusForToday = (logsArray) => {
         // Sort logsArray by date in descending order
         logsArray.sort((a, b) => new Date(b.date) - new Date(a.date));
-    
+
         // Get the most recent log entry
         const mostRecentLog = logsArray[0];
-    
+
         // Get today's date in YYYY-MM-DD format
         const today = new Date().toISOString().split("T")[0];
-    
+
         // Check if the most recent log entry date is today
         if (mostRecentLog.date === today) {
             return mostRecentLog.status;
@@ -83,46 +90,44 @@ const EmployeeDetails = () => {
     const calculateTotalStats = () => {
         let totalMilliseconds = 0;
         let totalDays = 0;
-    
+
         attendanceLogs.forEach((log) => {
             if (log.timeIn && log.timeOut) {
                 const timeIn = new Date(log.timeIn);
                 const timeOut = new Date(log.timeOut);
                 const millisecondsWorked = timeOut - timeIn;
                 totalMilliseconds += millisecondsWorked;
-    
+
                 totalDays++;
             }
         });
-    
+
         const totalSeconds = Math.floor(totalMilliseconds / 1000);
         const totalHours = totalSeconds / 3600;
-    
+
         const hours = Math.floor(totalHours);
         const minutes = Math.floor((totalSeconds % 3600) / 60);
         const seconds = totalSeconds % 60;
-    
+
         // Calculate remaining decimal part after subtracting whole hours
         const remainingDecimalHours = totalHours - hours;
         const decimalMinutes = Math.floor((remainingDecimalHours * 60) % 60);
         const decimalSeconds = Math.floor((remainingDecimalHours * 3600) % 60);
-    
+
         const formattedTotalTime = `${hours}:${minutes}:${seconds}`;
-        
-    
+
         return {
             totalHours: totalHours.toFixed(2),
             totalDays,
             hours,
             minutes,
             seconds,
-            formattedTotalTime: `${formattedTotalTime}.${decimalMinutes}${decimalSeconds}`, 
-
+            formattedTotalTime: `${formattedTotalTime}.${decimalMinutes}${decimalSeconds}`,
         };
     };
-    
+
     const { formattedTotalTime, totalDays } = calculateTotalStats();
-    const formattedTotalTimeWithoutDecimal = formattedTotalTime.split('.')[0];
+    const formattedTotalTimeWithoutDecimal = formattedTotalTime.split(".")[0];
 
     // Function to format the date
     const formatDate = (dateString) => {
@@ -159,20 +164,21 @@ const EmployeeDetails = () => {
             // If required fields are missing, return
             return;
         }
-    
+
         try {
             const database = getDatabase();
-            const attendanceRef = ref(database, `employees/${userId}/attendance/${selectedDate}`);
-    
+            const attendanceRef = ref(
+                database,
+                `employees/${userId}/attendance/${selectedDate}`
+            );
+
             // Push new attendance data without appending the selectedDate
             await set(attendanceRef, {
-                
-                    status: "Present",
-                    timeIn: selectedDate + 'T' + timeIn,
-                    timeOut: selectedDate + 'T' + timeOut
-                
+                status: "Present",
+                timeIn: selectedDate + "T" + timeIn,
+                timeOut: selectedDate + "T" + timeOut,
             });
-    
+
             setAddMode(false);
         } catch (error) {
             console.error("Error adding attendance:", error);
@@ -200,64 +206,81 @@ const EmployeeDetails = () => {
         const doc = new jsPDF();
         // Set the font size (adjust as needed)
         doc.setFontSize(12); // You might need to adjust this based on content length
-      
+
         // Add employee name to the PDF
-        doc.text(`Employee Name: ${employeeData.firstName} ${employeeData.middleName || ""} ${employeeData.lastName}`, 10, 10 );
-      
+        doc.text(
+            `Employee Name: ${employeeData.firstName} ${
+                employeeData.middleName || ""
+            } ${employeeData.lastName}`,
+            10,
+            10
+        );
+
         // Generate table data
         const tableData = attendanceLogs.map((log, index) => {
-          return [index + 1, ...[
-            formatDate(log.date),
-            log.status,
-            log.timeIn ? new Date(log.timeIn).toLocaleTimeString() : "-----",
-            log.timeOut ? new Date(log.timeOut).toLocaleTimeString() : "-----",
-          ]];
+            return [
+                index + 1,
+                ...[
+                    formatDate(log.date),
+                    log.status,
+                    log.timeIn
+                        ? new Date(log.timeIn).toLocaleTimeString()
+                        : "-----",
+                    log.timeOut
+                        ? new Date(log.timeOut).toLocaleTimeString()
+                        : "-----",
+                ],
+            ];
         });
         const tableWidth = 100;
-        const header = ['','Date','Status','Time in','Time Out'];
+        const header = ["", "Date", "Status", "Time in", "Time Out"];
         doc.autoTable({
-            head : [header],
+            head: [header],
             body: tableData,
             theme: "grid",
-            styles: {fontSize: 12},
-            columnStyles: {0: {columnWidth : 10}}
-        })
-    //     const mainHeader = ['Day','','AM','','PM','','Undertime',]; 
-        
-    //     const subHeaders = ['','Arrival', 'Departure', 'Arrival', 'Departure', ' Arrival', ' Departure'];
-        
-    //     const combinedHeaders = [
-    //     mainHeader,subHeaders
-    //     ];
-    // const tableWidth = 50;
-        
-    //     doc.autoTable({
-        
-    //       head: combinedHeaders,
-    //       body: tableData,
-    //       theme: "grid", // Optional table theme
-    //       styles: { fontSize: 2.5 }, // Adjust font size as needed
-    //       columnStyles: {
-    //         0: { columnWidth: 5 }, // Adjust width for Day column
-    //         1: { columnWidth: tableWidth / 6 }, // Distribute remaining width equally
-    //         2: { columnWidth: tableWidth / 6 },
-    //         3: { columnWidth: tableWidth / 6 },
-    //         4: { columnWidth: tableWidth / 6 },
-    //         5: { columnWidth: tableWidth / 6 },
-    //         6: { columnWidth: tableWidth / 6 },
-            
-    //       },
-    //       // Add manual line breaks for subheaders (optional)
-          
-    //     });
-      
+            styles: { fontSize: 12 },
+            columnStyles: { 0: { columnWidth: 10 } },
+        });
+        //     const mainHeader = ['Day','','AM','','PM','','Undertime',];
+
+        //     const subHeaders = ['','Arrival', 'Departure', 'Arrival', 'Departure', ' Arrival', ' Departure'];
+
+        //     const combinedHeaders = [
+        //     mainHeader,subHeaders
+        //     ];
+        // const tableWidth = 50;
+
+        //     doc.autoTable({
+
+        //       head: combinedHeaders,
+        //       body: tableData,
+        //       theme: "grid", // Optional table theme
+        //       styles: { fontSize: 2.5 }, // Adjust font size as needed
+        //       columnStyles: {
+        //         0: { columnWidth: 5 }, // Adjust width for Day column
+        //         1: { columnWidth: tableWidth / 6 }, // Distribute remaining width equally
+        //         2: { columnWidth: tableWidth / 6 },
+        //         3: { columnWidth: tableWidth / 6 },
+        //         4: { columnWidth: tableWidth / 6 },
+        //         5: { columnWidth: tableWidth / 6 },
+        //         6: { columnWidth: tableWidth / 6 },
+
+        //       },
+        //       // Add manual line breaks for subheaders (optional)
+
+        //     });
+
         // Trigger the download of the PDF
-        doc.save(`${employeeData.firstName} ${employeeData.middleName || ""} ${employeeData.lastName}.pdf`);
-      };
-      const totalLogs = attendanceLogs.length;
-      const indexOfLastLog = currentPage * itemsPerPage;
-      const indexOfFirstLog = indexOfLastLog - itemsPerPage;
-      const currentLogs = attendanceLogs.slice(indexOfFirstLog, indexOfLastLog);
+        doc.save(
+            `${employeeData.firstName} ${employeeData.middleName || ""} ${
+                employeeData.lastName
+            }.pdf`
+        );
+    };
+    const totalLogs = attendanceLogs.length;
+    const indexOfLastLog = currentPage * itemsPerPage;
+    const indexOfFirstLog = indexOfLastLog - itemsPerPage;
+    const currentLogs = attendanceLogs.slice(indexOfFirstLog, indexOfLastLog);
 
     return (
         <div className="main">
@@ -272,11 +295,20 @@ const EmployeeDetails = () => {
             </div>
             <div className="employeeDetails__title-wrapper">
                 <h1 className="employeeDetails__title">Employee Details</h1>
-                <button className="download-personal-log" onClick={handleDownloadPersonalLog}>Download Personal Log</button>
+                <button
+                    className="download-personal-log"
+                    onClick={handleDownloadPersonalLog}
+                >
+                    Download Personal Log
+                </button>
                 {!editMode && (
                     <button
                         className="employeeDetails__title-edit"
-                        onClick={() => handleEmployeeEditClick(`${employeeData.firstName} ${employeeData.middleName} ${employeeData.lastName}`)}
+                        onClick={() =>
+                            handleEmployeeEditClick(
+                                `${employeeData.firstName} ${employeeData.middleName} ${employeeData.lastName}`
+                            )
+                        }
                     >
                         Edit
                     </button>
@@ -289,7 +321,6 @@ const EmployeeDetails = () => {
                         Update
                     </button>
                 )}
-                
             </div>
             {employeeData && (
                 <div className="employee__details-parent">
@@ -453,10 +484,10 @@ const EmployeeDetails = () => {
                                     d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
                                 />
                             </svg>
-                                        
+
                             <div className="employeeDetails__stats-details-wrapper">
                                 <p className="employeeDetails__stats-details">
-                                    {formattedTotalTimeWithoutDecimal} 
+                                    {formattedTotalTimeWithoutDecimal}
                                 </p>
                                 <div className="timeFormat">HH:MM:SS</div>
                                 <p className="employeeDetails__stats-details-title">
@@ -471,39 +502,48 @@ const EmployeeDetails = () => {
             {attendanceLogs.length > 0 && (
                 <div className="employeeDetails__logs">
                     <div className="employeeDetails__logs-tittle-wrapper">
-    <h2 className="employeeDetails__logs-title">
-        Attendance History
-    </h2>
-    {!addMode && (
-        <button
-            className="employeeDetails__title-edit"
-            onClick={() =>handleAddClick(`${employeeData.firstName} ${employeeData.middleName} ${employeeData.lastName}`)} // Set addMode to true when clicked
-        >
-            Add
-        </button>
-    )}
-    
-</div>
+                        <h2 className="employeeDetails__logs-title">
+                            Attendance History
+                        </h2>
+                        {!addMode && (
+                            <button
+                                className="employeeDetails__title-edit"
+                                onClick={() =>
+                                    handleAddClick(
+                                        `${employeeData.firstName} ${employeeData.middleName} ${employeeData.lastName}`
+                                    )
+                                } // Set addMode to true when clicked
+                            >
+                                Add
+                            </button>
+                        )}
+                    </div>
                     <div className="employeeDetails__logs-container">
-                        {attendanceLogs.map((log) => (
+                        {currentLogs.map((log) => (
                             <div
-                            className={`employeeDetails__logs-box employeeDetails__logs-box-${log.status ? log.status.toLowerCase() : ''}`}
-                            key={log.date}
-                        >
-                            <div className="employeeDetails__logs-top">
-                                <p className="employeeDetails__logs-date">
-                                    {formatDate(log.date)}
-                                </p>
-                                <p
-                                    className={`employeeDetails__logs-status employeeDetails__logs-status-${log.status ? log.status.toLowerCase() : ''}`}
-                                >
-                                    <span className="employeeDetails__logs-status-bullet">
-                                        &#8226;
-                                    </span>
-                                    {log.status}
-                                </p>
-                            </div>
-                            <div className="employeeDetails__logs-bot">
+                                className={`employeeDetails__logs-box employeeDetails__logs-box-${
+                                    log.status ? log.status.toLowerCase() : ""
+                                }`}
+                                key={log.date}
+                            >
+                                <div className="employeeDetails__logs-top">
+                                    <p className="employeeDetails__logs-date">
+                                        {formatDate(log.date)}
+                                    </p>
+                                    <p
+                                        className={`employeeDetails__logs-status employeeDetails__logs-status-${
+                                            log.status
+                                                ? log.status.toLowerCase()
+                                                : ""
+                                        }`}
+                                    >
+                                        <span className="employeeDetails__logs-status-bullet">
+                                            &#8226;
+                                        </span>
+                                        {log.status}
+                                    </p>
+                                </div>
+                                <div className="employeeDetails__logs-bot">
                                     {log.timeIn ? (
                                         <div className="employeeDetails__logs-time-container">
                                             <p className="employeeDetails__logs-time-title">
@@ -549,45 +589,61 @@ const EmployeeDetails = () => {
                                 </div>
                             </div>
                         ))}
-                        <div className="pagination">
-                    <button className="prev" onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>
-                        Previous
-                    </button>
-                    <span className="page">Page {currentPage} of {Math.ceil(totalLogs / itemsPerPage)}</span>
-                    <button className="next" onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage === Math.ceil(totalLogs / itemsPerPage)}>
-                        Next
-                    </button>
-                </div>
+                    </div>
+                    <div className="pagination">
+                        <button
+                            className="prev"
+                            onClick={() => setCurrentPage(currentPage - 1)}
+                            disabled={currentPage === 1}
+                        >
+                            Previous
+                        </button>
+                        <span className="page">
+                            Page {currentPage} of{" "}
+                            {Math.ceil(totalLogs / itemsPerPage)}
+                        </span>
+                        <button
+                            className="next"
+                            onClick={() => setCurrentPage(currentPage + 1)}
+                            disabled={
+                                currentPage ===
+                                Math.ceil(totalLogs / itemsPerPage)
+                            }
+                        >
+                            Next
+                        </button>
                     </div>
                 </div>
             )}
 
-{addMode && (
-    <div className="employeeDetails__add-attendance">
-        <h2 className="employeeDetails__add-attendance-title">Add Attendance</h2>
-        <input
-            type="date"
-            value={selectedDate}
-            onChange={(e) => setSelectedDate(e.target.value)}
-        />
-        <input
-            type="time"
-            value={timeIn}
-            onChange={(e) => setTimeIn(e.target.value)}
-        />
-        <input
-            type="time"
-            value={timeOut}
-            onChange={(e) => setTimeOut(e.target.value)}
-        />
-        <button
-            className="employeeDetails__add-attendance-button"
-            onClick={handleAddAttendance}
-        >
-            Add Attendance
-        </button>
-    </div>
-)}
+            {addMode && (
+                <div className="employeeDetails__add-attendance">
+                    <h2 className="employeeDetails__add-attendance-title">
+                        Add Attendance
+                    </h2>
+                    <input
+                        type="date"
+                        value={selectedDate}
+                        onChange={(e) => setSelectedDate(e.target.value)}
+                    />
+                    <input
+                        type="time"
+                        value={timeIn}
+                        onChange={(e) => setTimeIn(e.target.value)}
+                    />
+                    <input
+                        type="time"
+                        value={timeOut}
+                        onChange={(e) => setTimeOut(e.target.value)}
+                    />
+                    <button
+                        className="employeeDetails__add-attendance-button"
+                        onClick={handleAddAttendance}
+                    >
+                        Add Attendance
+                    </button>
+                </div>
+            )}
         </div>
     );
 };

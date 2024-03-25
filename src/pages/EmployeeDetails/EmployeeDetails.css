@@ -1,4 +1,4 @@
-.main{
+.main {
     overflow-y: scroll;
 }
 .employeeDetails__top {
@@ -65,7 +65,7 @@
     display: flex;
     flex-direction: column;
 }
-.employeeDetails__logs-tittle-wrapper{
+.employeeDetails__logs-tittle-wrapper {
     padding-top: 1rem;
     display: flex;
     justify-content: space-between;
@@ -80,7 +80,6 @@
     position: relative;
     margin-left: 1rem;
 }
-
 
 .employeeDetails__title::before {
     content: "";
@@ -176,7 +175,7 @@
 }
 
 .employeeDetails__logs-box {
-    min-width: 320px;
+    width: 30%;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -215,7 +214,7 @@
     color: var(--clr-green);
     background-color: var(--clr-light-green);
 }
-.employeeDetails__logs-status-absent{
+.employeeDetails__logs-status-absent {
     color: var(--clr-red);
     background-color: var(--clr-light-red);
 }
@@ -249,25 +248,26 @@
     color: var(--clr-dark-blue);
     font-weight: 600;
 }
-.timeFormat{
+.timeFormat {
     display: flex;
     color: var(--clr-gray);
     margin-top: -1.5rem;
     margin-bottom: -1rem;
 }
-.download-personal-log{
+.download-personal-log {
     background-color: var(--clr-primary);
     padding: 0.5rem;
     border-radius: 1rem;
     color: var(--clr-dark-blue);
     font-weight: 600;
 }
-.pagination{
+.pagination {
     justify-content: center;
     display: flex;
     flex-direction: row;
 }
-.prev,.next,.page
-{
+.prev,
+.next,
+.page {
     margin: 0.5rem;
 }
