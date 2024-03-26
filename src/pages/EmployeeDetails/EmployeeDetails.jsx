@@ -159,6 +159,20 @@ const EmployeeDetails = () => {
         setEditMode(false);
     };
 
+    const handleCloseOverlay = () => {
+        setAddMode(false);
+    };
+
+    const handleOverlayClick = (e) => {
+        if (
+            e.target.classList.contains(
+                "employeeDetails__add-attendance-overlay"
+            )
+        ) {
+            handleCloseOverlay();
+        }
+    };
+
     const handleAddAttendance = async () => {
         if (!selectedDate || !timeIn) {
             // If required fields are missing, return
@@ -295,32 +309,34 @@ const EmployeeDetails = () => {
             </div>
             <div className="employeeDetails__title-wrapper">
                 <h1 className="employeeDetails__title">Employee Details</h1>
-                <button
-                    className="download-personal-log"
-                    onClick={handleDownloadPersonalLog}
-                >
-                    Download Personal Log
-                </button>
-                {!editMode && (
+                <div className="employeeDetails__button-wrapper">
                     <button
-                        className="employeeDetails__title-edit"
-                        onClick={() =>
-                            handleEmployeeEditClick(
-                                `${employeeData.firstName} ${employeeData.middleName} ${employeeData.lastName}`
-                            )
-                        }
+                        className="employeeDetails__title-button download-personal-log"
+                        onClick={handleDownloadPersonalLog}
                     >
-                        Edit
+                        Download Personal Log
                     </button>
-                )}
-                {editMode && (
-                    <button
-                        className="employeeDetails__title-edit"
-                        onClick={handleUpdateEmployee}
-                    >
-                        Update
-                    </button>
-                )}
+                    {!editMode && (
+                        <button
+                            className="employeeDetails__title-button employeeDetails__title-edit"
+                            onClick={() =>
+                                handleEmployeeEditClick(
+                                    `${employeeData.firstName} ${employeeData.middleName} ${employeeData.lastName}`
+                                )
+                            }
+                        >
+                            Edit
+                        </button>
+                    )}
+                    {editMode && (
+                        <button
+                            className="employeeDetails__title-edit"
+                            onClick={handleUpdateEmployee}
+                        >
+                            Update
+                        </button>
+                    )}
+                </div>
             </div>
             {employeeData && (
                 <div className="employee__details-parent">
@@ -505,18 +521,17 @@ const EmployeeDetails = () => {
                         <h2 className="employeeDetails__logs-title">
                             Attendance History
                         </h2>
-                        {!addMode && (
-                            <button
-                                className="employeeDetails__title-edit"
-                                onClick={() =>
-                                    handleAddClick(
-                                        `${employeeData.firstName} ${employeeData.middleName} ${employeeData.lastName}`
-                                    )
-                                } // Set addMode to true when clicked
-                            >
-                                Add
-                            </button>
-                        )}
+
+                        <button
+                            className="employeeDetails__title-button employeeDetails__title-edit"
+                            onClick={() =>
+                                handleAddClick(
+                                    `${employeeData.firstName} ${employeeData.middleName} ${employeeData.lastName}`
+                                )
+                            } // Set addMode to true when clicked
+                        >
+                            Add
+                        </button>
                     </div>
                     <div className="employeeDetails__logs-container">
                         {currentLogs.map((log) => (
@@ -591,57 +606,58 @@ const EmployeeDetails = () => {
                         ))}
                     </div>
                     <div className="pagination">
-                        <button
-                            className="prev"
-                            onClick={() => setCurrentPage(currentPage - 1)}
-                            disabled={currentPage === 1}
-                        >
-                            Previous
-                        </button>
-                        <span className="page">
-                            Page {currentPage} of{" "}
-                            {Math.ceil(totalLogs / itemsPerPage)}
-                        </span>
-                        <button
-                            className="next"
-                            onClick={() => setCurrentPage(currentPage + 1)}
-                            disabled={
-                                currentPage ===
-                                Math.ceil(totalLogs / itemsPerPage)
-                            }
-                        >
-                            Next
-                        </button>
+                        {Array.from(
+                            { length: Math.ceil(totalLogs / itemsPerPage) },
+                            (_, i) => (
+                                <button
+                                    key={i}
+                                    className={`employeeDetails__pagination page ${
+                                        currentPage === i + 1 ? "active" : ""
+                                    }`}
+                                    onClick={() => setCurrentPage(i + 1)}
+                                >
+                                    {i + 1}
+                                </button>
+                            )
+                        )}
                     </div>
                 </div>
             )}
 
             {addMode && (
-                <div className="employeeDetails__add-attendance">
-                    <h2 className="employeeDetails__add-attendance-title">
-                        Add Attendance
-                    </h2>
-                    <input
-                        type="date"
-                        value={selectedDate}
-                        onChange={(e) => setSelectedDate(e.target.value)}
-                    />
-                    <input
-                        type="time"
-                        value={timeIn}
-                        onChange={(e) => setTimeIn(e.target.value)}
-                    />
-                    <input
-                        type="time"
-                        value={timeOut}
-                        onChange={(e) => setTimeOut(e.target.value)}
-                    />
-                    <button
-                        className="employeeDetails__add-attendance-button"
-                        onClick={handleAddAttendance}
-                    >
-                        Add Attendance
-                    </button>
+                <div
+                    className="employeeDetails__add-attendance-overlay"
+                    onClick={handleOverlayClick}
+                >
+                    <div className="employeeDetails__add-attendance">
+                        <h2 className="employeeDetails__add-attendance-title">
+                            Add Attendance
+                        </h2>
+                        <input
+                            className="employeeDetails__add-attendance-date"
+                            type="date"
+                            value={selectedDate}
+                            onChange={(e) => setSelectedDate(e.target.value)}
+                        />
+                        <input
+                            className="employeeDetails__add-attendance-time"
+                            type="time"
+                            value={timeIn}
+                            onChange={(e) => setTimeIn(e.target.value)}
+                        />
+                        <input
+                            className="employeeDetails__add-attendance-time"
+                            type="time"
+                            value={timeOut}
+                            onChange={(e) => setTimeOut(e.target.value)}
+                        />
+                        <button
+                            className="employeeDetails__add-attendance-button"
+                            onClick={handleAddAttendance}
+                        >
+                            Add Attendance
+                        </button>
+                    </div>
                 </div>
             )}
         </div>
