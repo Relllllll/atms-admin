@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
     getDatabase,
     ref,
@@ -8,6 +8,7 @@ import {
     push,
     set,
     get,
+    remove,
 } from "firebase/database";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
@@ -15,6 +16,7 @@ import "./EmployeeDetails.css";
 
 const EmployeeDetails = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const [employeeData, setEmployeeData] = useState(null);
     const [attendanceLogs, setAttendanceLogs] = useState([]);
     const [statusToday, setStatusToday] = useState(null);
@@ -25,7 +27,7 @@ const EmployeeDetails = () => {
     const [timeIn, setTimeIn] = useState("");
     const [timeOut, setTimeOut] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [itemsPerPage, setItemsPerPage] = useState(9);
 
     useEffect(() => {
         const recognizedUserId =
@@ -281,6 +283,57 @@ const EmployeeDetails = () => {
     const indexOfFirstLog = indexOfLastLog - itemsPerPage;
     const currentLogs = attendanceLogs.slice(indexOfFirstLog, indexOfLastLog);
 
+    const handleArchiveEmployee = () => {
+        if (!userId) return;
+
+        try {
+            const database = getDatabase();
+            const employeeRef = ref(database, `employees/${userId}`);
+            const archivedDataRef = ref(database, "archivedData");
+
+            // Fetch the employee data
+            get(employeeRef)
+                .then((snapshot) => {
+                    const employeeData = snapshot.val();
+
+                    if (employeeData) {
+                        // Move employee data to archivedData collection
+                        set(archivedDataRef, {
+                            [userId]: employeeData,
+                        })
+                            .then(() => {
+                                // Remove employee data from current location
+                                remove(employeeRef)
+                                    .then(() => {
+                                        console.log(
+                                            "Employee archived successfully."
+                                        );
+                                        // Redirect to employee list or perform any other action
+                                    })
+                                    .catch((error) => {
+                                        console.error(
+                                            "Error removing employee data:",
+                                            error
+                                        );
+                                    });
+                            })
+                            .catch((error) => {
+                                console.error(
+                                    "Error archiving employee data:",
+                                    error
+                                );
+                            });
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error fetching employee data:", error);
+                });
+        } catch (error) {
+            console.error("Error archiving employee:", error);
+        }
+        navigate("/employee-list");
+    };
+
     return (
         <div className="main">
             <div className="employeeDetails__top">
@@ -295,6 +348,12 @@ const EmployeeDetails = () => {
             <div className="employeeDetails__title-wrapper">
                 <h1 className="employeeDetails__title">Employee Details</h1>
                 <div className="employeeDetails__button-wrapper">
+                    <button
+                        className="employeeDetails__title-button download-personal-log"
+                        onClick={handleArchiveEmployee}
+                    >
+                        Archive
+                    </button>
                     <button
                         className="employeeDetails__title-button download-personal-log"
                         onClick={handleDownloadPersonalLog}
