@@ -77,19 +77,21 @@ const Register = () => {
             if (!selectedID) return;
             const worker = await workerInitialization();
             const { data } = await worker.recognize(selectedID);
-            
+
             setTextResult(data.text);
-            const lines = data.text.split("\n").map(line => line.replace(/[^a-zA-Z\s]/g, ''));
-            const filteredLines = lines.filter(line => line.trim() !== ''); // Remove empty lines
+            const lines = data.text
+                .split("\n")
+                .map((line) => line.replace(/[^a-zA-Z\s]/g, ""));
+            const filteredLines = lines.filter((line) => line.trim() !== ""); // Remove empty lines
             setExtractedLines(filteredLines);
             console.log("Extracted Lines:", filteredLines);
             await worker.terminate();
-        
+
             // adjustable
             if (filteredLines.length > 0) {
                 // Splitting the filtered line into four parts
-                let parts = filteredLines[6].split(' ');
-            
+                let parts = filteredLines[6].split(" ");
+
                 // Checking if there are at least four parts
                 if (parts.length >= 4) {
                     // Assuming you want to assign each part to a different variable
@@ -112,22 +114,22 @@ const Register = () => {
                         // Assuming you wanted to set lastName twice, adjust as needed
                     });
                 } else {
-                    console.log("Filtered line doesn't have enough parts to split into four.");
+                    console.log(
+                        "Filtered line doesn't have enough parts to split into four."
+                    );
                 }
             }
             await worker.terminate();
         };
 
         convertImageToText();
-    }, [selectedID]); 
+    }, [selectedID]);
 
     useEffect(() => {
         if (!user) {
             navigate("/");
         }
     }, [user, navigate]);
-
-    
 
     const [imageUrl, setImageUrl] = useState(null);
     const [notification, setNotification] = useState("");
@@ -139,7 +141,26 @@ const Register = () => {
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
-        setFormData({ ...formData, [name]: value });
+
+        // Validate input based on name
+        if (name === "contactNum") {
+            // Allow only numbers
+            if (/^\d*$/.test(value)) {
+                setFormData({ ...formData, [name]: value });
+            }
+        } else if (
+            name === "firstName" ||
+            name === "middleName" ||
+            name === "lastName"
+        ) {
+            // Allow only letters
+            if (/^[a-zA-Z\s]*$/.test(value)) {
+                setFormData({ ...formData, [name]: value });
+            }
+        } else {
+            // For other inputs, set value directly
+            setFormData({ ...formData, [name]: value });
+        }
     };
 
     const handleIDImageChange = (e) => {
@@ -221,7 +242,7 @@ const Register = () => {
         const clickTime = new Date().toISOString();
         const database = getDatabase();
         const logsRef = ref(database, "logs");
-        const logMessage = 'admin Registered an employee';
+        const logMessage = "admin Registered an employee";
         push(logsRef, { action: logMessage, time: clickTime });
         event.preventDefault();
 
@@ -264,7 +285,7 @@ const Register = () => {
             <Notification notification={notification} closePopup={closePopup} />
             {!showRegistrationForm ? (
                 <>
-                <h1 className="register__title">Register - Upload ID</h1>
+                    <h1 className="register__title">Register - Upload ID</h1>
                     <div
                         className="register__image-upload-container"
                         onClick={() => idImageInputRef.current.click()}
@@ -295,7 +316,7 @@ const Register = () => {
                     <>
                         <h1 className="register__title">Register</h1>
                         <div className="register__inputs-container">
-                        <div className="register__input-wrapper">
+                            <div className="register__input-wrapper">
                                 <label
                                     className="register__input-label"
                                     htmlFor="firstName"
@@ -379,10 +400,7 @@ const Register = () => {
                                     id="age"
                                     name="age"
                                     placeholder="Age"
-
-
-                                     value={formData.age} 
-
+                                    value={formData.age}
                                     onChange={handleInputChange}
                                     required
                                 />
@@ -400,10 +418,7 @@ const Register = () => {
                                     id="contactNum"
                                     name="contactNum"
                                     placeholder="Enter contact number..."
-
-
-                                     value={formData.contactNum} 
-
+                                    value={formData.contactNum}
                                     onChange={handleInputChange}
                                     required
                                 />
@@ -421,15 +436,15 @@ const Register = () => {
                                     id="address"
                                     name="address"
                                     placeholder="Enter address..."
-
-                                    value={formData.address} 
-
+                                    value={formData.address}
                                     onChange={handleInputChange}
                                     required
                                 />
                             </div>
                             <div>
-                                <label className="register__input-label">Face Picture:</label>
+                                <label className="register__input-label">
+                                    Face Picture:
+                                </label>
                                 <div
                                     className="register__image-upload-container"
                                     onDragOver={handleDragOver}
@@ -438,7 +453,6 @@ const Register = () => {
                                         generalImageInputRef.current.click()
                                     }
                                 >
-                                    
                                     {imageUrl ? (
                                         <div className="register__image-preview">
                                             <img

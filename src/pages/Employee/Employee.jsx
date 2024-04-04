@@ -33,36 +33,38 @@ const Employee = () => {
 
         const employeesQuery = query(employeesRef, orderByChild("idNumber"));
 
-        onValue(
-            employeesQuery,
-            (snapshot) => {
-                const employeesData = snapshot.val();
-                const employeesArray = Object.entries(employeesData)
-                    .map(([id, employee]) => ({
-                        id,
-                        ...employee,
-                    }))
-                    .sort((a, b) => a.idNumber.localeCompare(b.idNumber));
-                setEmployees(employeesArray);
-            }
-        );
-    }, []); 
+        onValue(employeesQuery, (snapshot) => {
+            const employeesData = snapshot.val();
+            const employeesArray = Object.entries(employeesData)
+                .map(([id, employee]) => ({
+                    id,
+                    ...employee,
+                }))
+                .sort((a, b) => a.idNumber.localeCompare(b.idNumber));
+            setEmployees(employeesArray);
+        });
+    }, []);
 
     useEffect(() => {
         if (Array.isArray(employees) && employees.length > 0) {
-            const statusPromises = employees.map(employee => {
-                return handleStatusToday(employee.id, new Date().toISOString().split('T')[0]);
+            const statusPromises = employees.map((employee) => {
+                return handleStatusToday(
+                    employee.id,
+                    new Date().toISOString().split("T")[0]
+                );
             });
-    
+
             Promise.all(statusPromises)
-                .then(statuses => {
-                    const updatedEmployees = employees.map((employee, index) => ({
-                        ...employee,
-                        statusToday: statuses[index]
-                    }));
+                .then((statuses) => {
+                    const updatedEmployees = employees.map(
+                        (employee, index) => ({
+                            ...employee,
+                            statusToday: statuses[index],
+                        })
+                    );
                     setEmployees(updatedEmployees);
                 })
-                .catch(error => {
+                .catch((error) => {
                     console.error("Error fetching statuses:", error);
                 });
         }
@@ -71,11 +73,12 @@ const Employee = () => {
     const searchEmployees = Object.values(employees).filter((employee) => {
         if (!searchInput) return true;
 
-        const idNumber = `${employee.idNumber}`
+        const idNumber = `${employee.idNumber}`;
         const searchTerm = searchInput.toLowerCase();
         const fullName = `${employee.lastName.toLowerCase()} ${employee.firstName.toLowerCase()} ${
-            employee.middleName?.toLowerCase() || ""}`;
-        
+            employee.middleName?.toLowerCase() || ""
+        }`;
+
         return fullName.includes(searchTerm) || idNumber.includes(searchTerm);
     });
 
@@ -87,53 +90,85 @@ const Employee = () => {
         push(logsRef, { action: logMessage, time: clickTime });
     };
 
+    const paginationRange = 5; // Number of pages to display in the pagination bar
+    const totalPages = Math.ceil(searchEmployees.length / itemsPerPage);
+
+    const getPageNumbers = () => {
+        const pageNumbers = [];
+        const startPage = Math.max(
+            1,
+            currentPage - Math.floor(paginationRange / 2)
+        );
+        const endPage = Math.min(totalPages, startPage + paginationRange - 1);
+
+        if (startPage > 1) {
+            pageNumbers.push(1); // Add the first page number
+            if (startPage > 2) {
+                pageNumbers.push("ellipsis"); // Add ellipsis if needed
+            }
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            pageNumbers.push(i);
+        }
+
+        if (endPage < totalPages - 1) {
+            pageNumbers.push("ellipsis"); // Add ellipsis if needed
+        }
+
+        if (endPage < totalPages) {
+            pageNumbers.push(totalPages); // Add the last page number
+        }
+
+        return pageNumbers;
+    };
+
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
     const indexOfLastEmployee = currentPage * itemsPerPage;
     const indexOfFirstEmployee = indexOfLastEmployee - itemsPerPage;
-    const currentEmployees = searchEmployees.slice(indexOfFirstEmployee, indexOfLastEmployee);
-
-    const paginate = (pageNumber) => setCurrentPage(pageNumber);
-    const handleNextPage = () => {
-        if (currentPage < Math.ceil(searchEmployees.length / itemsPerPage)) {
-            setCurrentPage(currentPage + 1);
-        }
-    };
-    
-    const handlePrevPage = () => {
-        if (currentPage > 1) {
-            setCurrentPage(currentPage - 1);
-        }
-    };
+    const currentEmployees = searchEmployees.slice(
+        indexOfFirstEmployee,
+        indexOfLastEmployee
+    );
 
     const handleStatusToday = (userId, date) => {
         const database = getDatabase();
         const attendanceRef = ref(database, `employees/${userId}/attendance`);
-    
+
         return get(attendanceRef)
             .then((snapshot) => {
                 const attendanceData = snapshot.val();
-    
+
                 if (attendanceData) {
-                    const dates = Object.keys(attendanceData || {}).map(dateString => {
-                        const date = new Date(dateString);
-                        return isNaN(date.getTime()) ? null : date;
-                    }).filter(date => date !== null);
-                
+                    const dates = Object.keys(attendanceData || {})
+                        .map((dateString) => {
+                            const date = new Date(dateString);
+                            return isNaN(date.getTime()) ? null : date;
+                        })
+                        .filter((date) => date !== null);
+
                     dates.sort((a, b) => {
                         if (!a) return 1;
                         if (!b) return -1;
                         return a.getTime() - b.getTime();
                     });
-                
+
                     const lastAttendanceDate = dates[dates.length - 1];
-                
+
                     const lastAttendance = new Date(lastAttendanceDate);
                     const dateToday = new Date(date);
-                
+
                     let statusToday = "Absent";
-                    if (dateToday.toDateString() === lastAttendance.toDateString()) {
+                    if (
+                        dateToday.toDateString() ===
+                        lastAttendance.toDateString()
+                    ) {
                         statusToday = "Present";
                     }
-    
+
                     return statusToday;
                 } else {
                     return "Absent";
@@ -189,7 +224,8 @@ const Employee = () => {
                         {currentEmployees.length > 0 && (
                             <tbody className="employee__table-body">
                                 {currentEmployees.map((employee, index) => {
-                                    const latestAttendanceStatus = employee.statusToday || "Absent";
+                                    const latestAttendanceStatus =
+                                        employee.statusToday || "Absent";
 
                                     return (
                                         <tr
@@ -201,7 +237,11 @@ const Employee = () => {
                                             <td>
                                                 <Link
                                                     to={`/employee-details/${employee.id}`}
-                                                    onClick={() => handleEmployeeClick(`${employee.firstName} ${employee.middleName} ${employee.lastName}`)}
+                                                    onClick={() =>
+                                                        handleEmployeeClick(
+                                                            `${employee.firstName} ${employee.middleName} ${employee.lastName}`
+                                                        )
+                                                    }
                                                 >
                                                     {employee.firstName}{" "}
                                                     {employee.middleName}{" "}
@@ -211,7 +251,9 @@ const Employee = () => {
                                             <td>{employee.contactNum}</td>
                                             <td>
                                                 <span
-                                                    className={latestAttendanceStatus}
+                                                    className={
+                                                        latestAttendanceStatus
+                                                    }
                                                 >
                                                     {latestAttendanceStatus}
                                                 </span>
@@ -223,19 +265,30 @@ const Employee = () => {
                         )}
                     </table>
                 </div>
-                {searchEmployees.length > itemsPerPage && (
-                    <nav className="pagination">
-                        <button className="prev" onClick={handlePrevPage} disabled={currentPage === 1}>
-                            Previous
-                        </button>
-                        <span className="page"> 
-                            Page {currentPage} of {Math.ceil(searchEmployees.length / itemsPerPage)}
-                        </span>
-                        <button className="name" onClick={handleNextPage} disabled={currentPage === Math.ceil(searchEmployees.length / itemsPerPage)}>
-                            Next
-                        </button>
-                    </nav>
-                )}
+                {/* Pagination */}
+                <div className="pagination">
+                    {/* Display page numbers */}
+                    {getPageNumbers().map((pageNumber, index) => {
+                        if (pageNumber === "ellipsis") {
+                            return (
+                                <span key={index} className="ellipsis">
+                                    ...
+                                </span>
+                            );
+                        }
+                        return (
+                            <button
+                                key={index}
+                                className={`page-number ${
+                                    currentPage === pageNumber ? "active" : ""
+                                }`}
+                                onClick={() => handlePageChange(pageNumber)}
+                            >
+                                {pageNumber}
+                            </button>
+                        );
+                    })}
+                </div>
             </div>
         </div>
     );

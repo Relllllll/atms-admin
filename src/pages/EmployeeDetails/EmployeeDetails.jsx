@@ -25,7 +25,7 @@ const EmployeeDetails = () => {
     const [timeIn, setTimeIn] = useState("");
     const [timeOut, setTimeOut] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(9);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
 
     useEffect(() => {
         const recognizedUserId =
@@ -246,43 +246,27 @@ const EmployeeDetails = () => {
                 ],
             ];
         });
-        const tableWidth = 100;
-        const header = ["", "Date", "Status", "Time in", "Time Out"];
-        doc.autoTable({
-            head: [header],
-            body: tableData,
-            theme: "grid",
-            styles: { fontSize: 12 },
-            columnStyles: { 0: { columnWidth: 10 } },
+
+        let startY = 20; // Initial y position for the table
+        const pageHeight = doc.internal.pageSize.height; // Get page height
+
+        // Loop through table data and add it to the PDF page by page
+        tableData.forEach((rowData, index) => {
+            if (startY + 10 > pageHeight) {
+                // Check if the current table row will exceed the page height
+                doc.addPage(); // If yes, add a new page
+                startY = 20; // Reset startY for the new page
+            }
+            doc.autoTable({
+                startY: startY,
+                head: [header],
+                body: [rowData],
+                theme: "grid",
+                styles: { fontSize: 12 },
+                columnStyles: { 0: { columnWidth: 10 } },
+            });
+            startY += 10; // Increment startY for the next table row
         });
-        //     const mainHeader = ['Day','','AM','','PM','','Undertime',];
-
-        //     const subHeaders = ['','Arrival', 'Departure', 'Arrival', 'Departure', ' Arrival', ' Departure'];
-
-        //     const combinedHeaders = [
-        //     mainHeader,subHeaders
-        //     ];
-        // const tableWidth = 50;
-
-        //     doc.autoTable({
-
-        //       head: combinedHeaders,
-        //       body: tableData,
-        //       theme: "grid", // Optional table theme
-        //       styles: { fontSize: 2.5 }, // Adjust font size as needed
-        //       columnStyles: {
-        //         0: { columnWidth: 5 }, // Adjust width for Day column
-        //         1: { columnWidth: tableWidth / 6 }, // Distribute remaining width equally
-        //         2: { columnWidth: tableWidth / 6 },
-        //         3: { columnWidth: tableWidth / 6 },
-        //         4: { columnWidth: tableWidth / 6 },
-        //         5: { columnWidth: tableWidth / 6 },
-        //         6: { columnWidth: tableWidth / 6 },
-
-        //       },
-        //       // Add manual line breaks for subheaders (optional)
-
-        //     });
 
         // Trigger the download of the PDF
         doc.save(
@@ -291,6 +275,7 @@ const EmployeeDetails = () => {
             }.pdf`
         );
     };
+
     const totalLogs = attendanceLogs.length;
     const indexOfLastLog = currentPage * itemsPerPage;
     const indexOfFirstLog = indexOfLastLog - itemsPerPage;

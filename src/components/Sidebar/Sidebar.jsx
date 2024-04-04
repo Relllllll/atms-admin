@@ -16,7 +16,9 @@ const Sidebar = () => {
         onValue(messagesRef, (snapshot) => {
             const messagesData = snapshot.val();
             if (messagesData) {
-                const unread = Object.values(messagesData).some(message => !message.read); // Check if there are unread messages
+                const unread = Object.values(messagesData).some(
+                    (message) => !message.read
+                ); // Check if there are unread messages
                 setUnreadMessages(unread);
             } else {
                 setUnreadMessages(false);
@@ -25,7 +27,7 @@ const Sidebar = () => {
     }, []);
 
     const handleSignOut = () => {
-        localStorage.removeItem('sessionToken');
+        localStorage.removeItem("sessionToken");
         signOut(auth)
             .then(() => {
                 navigate("/");
@@ -34,7 +36,6 @@ const Sidebar = () => {
                 console.log(error);
             });
     };
-
 
     return (
         <sidebar className="sidebar">
@@ -103,39 +104,42 @@ const Sidebar = () => {
                     <p className="sidebar__menu-item">Attendance Logs</p>
                 </Link>
                 <Link to="/ticket" className="sidebar__menu-link">
-                <svg 
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="sidebar__menu-icon"
-                >
-                    <path 
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M14 13q.6 0 1.088-.325t.737-.875q.075-.35.35-.575T16.8 11H20V4H8v7h3.2q.35 0 .625.213t.35.562q.125.6.65.913T14 13m-6 5q-.825 0-1.412-.587T6 16V4q0-.825.588-1.412T8 2h12q.825 0 1.413.588T22 4v12q0 .825-.587 1.413T20 18zm-4 4q-.825 0-1.412-.587T2 20V7q0-.425.288-.712T3 6q.425 0 .713.288T4 7v13h13q.425 0 .713.288T18 21q0 .425-.288.713T17 22z"
-                    />
-                </svg>
-                <p className="sidebar__menu-item">Report</p>
-                    {unreadMessages && <span className="notification-dot"></span>}
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="sidebar__menu-icon"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M14 13q.6 0 1.088-.325t.737-.875q.075-.35.35-.575T16.8 11H20V4H8v7h3.2q.35 0 .625.213t.35.562q.125.6.65.913T14 13m-6 5q-.825 0-1.412-.587T6 16V4q0-.825.588-1.412T8 2h12q.825 0 1.413.588T22 4v12q0 .825-.587 1.413T20 18zm-4 4q-.825 0-1.412-.587T2 20V7q0-.425.288-.712T3 6q.425 0 .713.288T4 7v13h13q.425 0 .713.288T18 21q0 .425-.288.713T17 22z"
+                        />
+                    </svg>
+                    <p className="sidebar__menu-item">Report</p>
+                    {unreadMessages && (
+                        <span className="notification-dot"></span>
+                    )}
                 </Link>
                 <Link to="/activity-log" className="sidebar__menu-link">
-                <svg 
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="sidebar__menu-icon"
-                >
-                    <path 
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M7.998 2.478a.5.5 0 0 1-.453.542a5 5 0 1 0 5.435 5.435a.5.5 0 0 1 .996.09a6 6 0 1 1-6.52-6.52a.5.5 0 0 1 .542.453M7.5 5a.5.5 0 0 1 .5.5V8h1.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5m2.136-2.774a.5.5 0 1 0-.272.962c.547.155 1.057.4 1.511.72a.5.5 0 0 0 .576-.817a5.978 5.978 0 0 0-1.815-.865m3.273 2.323a.5.5 0 1 0-.818.576c.32.454.566.964.72 1.511a.5.5 0 0 0 .963-.272a5.977 5.977 0 0 0-.865-1.815"
-                    />
-                </svg>
-                <p className="sidebar__menu-item">Activity Logs</p>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        className="sidebar__menu-icon"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                    </svg>
+
+                    <p className="sidebar__menu-item">Activity Logs</p>
                 </Link>
             </div>
 

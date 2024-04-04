@@ -1,18 +1,17 @@
-.ticket{
+.ticket {
     display: flex;
     flex-direction: column;
     padding: 0 !important;
 }
-.ticket__list-container{
+.ticket__list-container {
     padding: 1rem;
-    overflow: scroll;
+    /* overflow: scroll; */
     height: 100%;
 }
-.ticket__tittle{
+.ticket__tittle {
     color: var(--clr-dark-blue);
     position: relative;
     margin-left: 1rem;
-    
 }
 .ticket__tittle::before {
     content: "";
@@ -25,7 +24,7 @@
     border-radius: 1rem;
 }
 
-.ticket__table{
+.ticket__table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 1rem;

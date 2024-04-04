@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getDatabase, ref, get, set } from "firebase/database";
 import { auth } from "../../firebase";
-import "./ActivityLog.css"
+import "./ActivityLog.css";
 
 const ActivityLog = ({ loggedActions }) => {
     const [user] = useAuthState(auth);
@@ -22,7 +22,7 @@ const ActivityLog = ({ loggedActions }) => {
     useEffect(() => {
         const fetchLogs = async () => {
             const db = getDatabase();
-            const dbRef = ref(db, 'logs');
+            const dbRef = ref(db, "logs");
 
             // Check if the 'logs' folder exists
             const snapshot = await get(dbRef);
@@ -52,17 +52,52 @@ const ActivityLog = ({ loggedActions }) => {
         };
     }, []);
 
+    const paginationRange = 5; // Number of pages to display in the pagination bar
+    const totalPages = Math.ceil(totalLogs / itemsPerPage);
+
+    const getPageNumbers = () => {
+        const pageNumbers = [];
+        const startPage = Math.max(
+            1,
+            currentPage - Math.floor(paginationRange / 2)
+        );
+        const endPage = Math.min(totalPages, startPage + paginationRange - 1);
+
+        if (startPage > 1) {
+            pageNumbers.push(1); // Add the first page number
+            if (startPage > 2) {
+                pageNumbers.push("ellipsis"); // Add ellipsis if needed
+            }
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            pageNumbers.push(i);
+        }
+
+        if (endPage < totalPages - 1) {
+            pageNumbers.push("ellipsis"); // Add ellipsis if needed
+        }
+
+        if (endPage < totalPages) {
+            pageNumbers.push(totalPages); // Add the last page number
+        }
+
+        return pageNumbers;
+    };
+
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
     const indexOfLastLog = currentPage * itemsPerPage;
     const indexOfFirstLog = indexOfLastLog - itemsPerPage;
     const currentLogs = logs.slice(indexOfFirstLog, indexOfLastLog);
 
-    const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
     return (
         <div className="main activity_logs">
-          <div className="activity-log__list-container">
-            <h1 className="activity-logs__title">Activity Logs</h1>
-            
+            <div className="activity-log__list-container">
+                <h1 className="activity-logs__title">Activity Logs</h1>
+
                 <table className="activity-log__table">
                     <thead className="activity-log__table-header">
                         <tr>
@@ -75,8 +110,12 @@ const ActivityLog = ({ loggedActions }) => {
                         {/* Render the current page of logs */}
                         {currentLogs.map((log, index) => (
                             <tr key={index}>
-                                <td>{new Date(log.time).toLocaleDateString()}</td>
-                                <td>{new Date(log.time).toLocaleTimeString()}</td>
+                                <td>
+                                    {new Date(log.time).toLocaleDateString()}
+                                </td>
+                                <td>
+                                    {new Date(log.time).toLocaleTimeString()}
+                                </td>
                                 <td>{log.action}</td>
                             </tr>
                         ))}
@@ -84,13 +123,27 @@ const ActivityLog = ({ loggedActions }) => {
                 </table>
                 {/* Pagination */}
                 <div className="pagination">
-                    <button className="prev" onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>
-                        Previous
-                    </button>
-                    <span className="page">Page {currentPage} of {Math.ceil(totalLogs / itemsPerPage)}</span>
-                    <button className="next" onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage === Math.ceil(totalLogs / itemsPerPage)}>
-                        Next
-                    </button>
+                    {/* Display page numbers */}
+                    {getPageNumbers().map((pageNumber, index) => {
+                        if (pageNumber === "ellipsis") {
+                            return (
+                                <span key={index} className="ellipsis">
+                                    ...
+                                </span>
+                            );
+                        }
+                        return (
+                            <button
+                                key={index}
+                                className={`page-number ${
+                                    currentPage === pageNumber ? "active" : ""
+                                }`}
+                                onClick={() => handlePageChange(pageNumber)}
+                            >
+                                {pageNumber}
+                            </button>
+                        );
+                    })}
                 </div>
             </div>
         </div>

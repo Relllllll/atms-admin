@@ -6,7 +6,7 @@
 
 .logs__list-container {
     padding: 1rem;
-    overflow: scroll;
+    /* overflow: scroll; */
 }
 
 .logs__title {
@@ -103,83 +103,82 @@
     background-color: #0056b3;
 }
 
-.logs__date-picker{
+.logs__date-picker {
     color: var(--clr-dark-blue);
-    padding-top:1rem ;
+    padding-top: 1rem;
     display: flex;
     justify-content: center;
-
-
 }
-.startDate{
+.startDate {
     border-color: var(--clr-primary);
-    border-width: 0.2rem ;
+    border-width: 0.2rem;
     border-radius: 0.5rem;
     background-color: var(--clr-light);
     width: 58.5vh;
 }
-.endDate{
+.endDate {
     border-color: var(--clr-primary);
-    border-width: 0.2rem ;
+    border-width: 0.2rem;
     border-radius: 0.5rem;
     background-color: var(--clr-light);
     width: 58.5vh;
 }
 .date-picker {
-    
     display: flex;
     justify-content: center;
     margin: 1rem; /* Adjust margin as needed */
-  }
-  
-  /* Customize the appearance of the individual date picker inputs */
-  .react-datepicker__input-container {
+}
+
+/* Customize the appearance of the individual date picker inputs */
+.react-datepicker__input-container {
     margin: 0 0.5rem; /* Adjust margin as needed */
-  }
-  
-  /* Customize the appearance of the selected date */
-  .react-datepicker__day--selected {
-    background-color: var(--clr-primary); /* Change background color of selected date */
+}
+
+/* Customize the appearance of the selected date */
+.react-datepicker__day--selected {
+    background-color: var(
+        --clr-primary
+    ); /* Change background color of selected date */
     color: #ffffff; /* Change text color of selected date */
-  }
-  
-  /* Customize the appearance of the hover state for date cells */
-  .react-datepicker__day:hover {
+}
+
+/* Customize the appearance of the hover state for date cells */
+.react-datepicker__day:hover {
     background-color: #f0f0f0; /* Change background color on hover */
-  }
-  
-  /* Customize the appearance of the date picker calendar */
-  .react-datepicker {
+}
+
+/* Customize the appearance of the date picker calendar */
+.react-datepicker {
     font-family: Arial, sans-serif; /* Change font family */
     border: 1px solid var(--clr-light-gray); /* Add border */
-  }
-  
-  /* Customize the appearance of the date picker header */
-  .react-datepicker__header {
+}
+
+/* Customize the appearance of the date picker header */
+.react-datepicker__header {
     background-color: var(--clr-primary); /* Change header background color */
     color: #ffffff; /* Change header text color */
-  }
-  
-  /* Customize the appearance of the previous and next month buttons */
-  .react-datepicker__navigation--previous,
-  .react-datepicker__navigation--next {
+}
+
+/* Customize the appearance of the previous and next month buttons */
+.react-datepicker__navigation--previous,
+.react-datepicker__navigation--next {
     border: none; /* Remove border from buttons */
     background-color: transparent; /* Make buttons transparent */
     color: #ffffff; /* Change button text color */
-  }
-  
-  /* Customize the appearance of the day names (e.g., Mon, Tue, etc.) */
-  .react-datepicker__day-name {
+}
+
+/* Customize the appearance of the day names (e.g., Mon, Tue, etc.) */
+.react-datepicker__day-name {
     color: var(--clr-dark-blue); /* Change day name text color */
-  }
-  
-  /* Customize the appearance of the day numbers */
-  .react-datepicker__day {
+}
+
+/* Customize the appearance of the day numbers */
+.react-datepicker__day {
     color: var(--clr-dark-blue); /* Change day number text color */
-  }
-  
-  /* Customize the appearance of the download button */
-  .download-button {
+}
+
+/* Customize the appearance of the download button */
+.download-button {
     position: fixed;
     bottom: 2rem;
     right: 3rem;
@@ -191,17 +190,34 @@
     cursor: pointer;
     width: 15rem;
     font-weight: 700;
-  }
-  
-  .download-button:hover {
+}
+
+.download-button:hover {
     background-color: #0056b3;
-  }
-  .pagination{
+}
+.pagination {
+    padding-top: 1rem;
     justify-content: center;
     display: flex;
     flex-direction: row;
-  }
-  .prev,.next,.page
-  {
-    margin: 0.5rem;
-  }
+    gap: 2rem;
+}
+
+.page-number {
+    padding: 0.5rem 1rem;
+    border: 2px solid var(--clr-primary);
+    border-radius: 1rem;
+    transition: background-color 0.3s;
+}
+
+.page-number:hover {
+    background-color: #f7b13760;
+}
+
+.active {
+    background-color: #f7b13760;
+}
+
+.ellipsis {
+    margin-top: auto;
+}
