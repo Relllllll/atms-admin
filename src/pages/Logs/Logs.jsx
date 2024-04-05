@@ -25,6 +25,13 @@ const Logs = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(10);
     const [totalLogs, setTotalLogs] = useState(0);
+    const [selectedStatus, setSelectedStatus] = useState("");
+
+    useEffect(() => {
+        if (!user) {
+            navigate("/");
+        }
+    }, [user, navigate]);
 
     useEffect(() => {
         if (!user) {
@@ -57,34 +64,36 @@ const Logs = () => {
                             const entry = attendance[date];
                             const { status, timeIn, timeOut } = entry;
 
-                            // Create log entry
-                            const logEntry = {
-                                userId: employeeId,
-                                idNumber: `${employee.idNumber}`,
-                                userName: `${firstName} ${lastName}`,
-                                date: new Date(date).toLocaleDateString(),
-                                timeIn: timeIn
-                                    ? new Date(timeIn).toLocaleTimeString()
-                                    : "-----",
-                                timeOut: timeOut
-                                    ? new Date(timeOut).toLocaleTimeString()
-                                    : "-----",
-                                status,
-                            };
-
-                            // Check if log entry falls within selected date range
-                            if (
-                                (startDate &&
-                                    endDate &&
-                                    new Date(logEntry.date) >= startDate &&
-                                    new Date(logEntry.date) <= endDate) ||
-                                (!startDate && !endDate) // Include all logs if no date range
-                            ) {
+                            // Create log entry and filter by status if applicable
+                            if (!selectedStatus || status === selectedStatus) {
+                                const logEntry = {
+                                    userId: employeeId,
+                                    idNumber: `${employee.idNumber}`,
+                                    userName: `${firstName} ${lastName}`,
+                                    date: new Date(date).toLocaleDateString(),
+                                    timeIn: timeIn
+                                        ? new Date(timeIn).toLocaleTimeString()
+                                        : "-----",
+                                    timeOut: timeOut
+                                        ? new Date(timeOut).toLocaleTimeString()
+                                        : "-----",
+                                    status,
+                                };
                                 newLogs.push(logEntry); // Push log entry to the array
                                 total++; // Increment total count
                             }
                         }
                     }
+
+                    // Apply additional filtering by date range
+                    newLogs = newLogs.filter(
+                        (log) =>
+                            (startDate &&
+                                endDate &&
+                                new Date(log.date) >= startDate &&
+                                new Date(log.date) <= endDate) ||
+                            (!startDate && !endDate)
+                    );
 
                     // Sort logs by date (latest on top)
                     newLogs.sort((a, b) => {
@@ -100,14 +109,14 @@ const Logs = () => {
                         );
                     });
 
-                    // Apply pagination (assuming `currentPage` and `itemsPerPage` are defined)
+                    // Apply pagination
                     const offset = (currentPage - 1) * itemsPerPage;
                     const paginatedLogs = newLogs.slice(
                         offset,
                         offset + itemsPerPage
                     );
 
-                    setTotalLogs(total); // Update total log count after filtering
+                    setTotalLogs(total); // Update total log count after all filtering
                     setLogs(paginatedLogs); // Set displayed logs for current page
                 }
             },
@@ -116,7 +125,7 @@ const Logs = () => {
 
         // Cleanup function to unsubscribe when the component unmounts
         return () => unsubscribe();
-    }, [startDate, endDate, currentPage, itemsPerPage]);
+    }, [startDate, endDate, selectedStatus, currentPage, itemsPerPage]);
 
     useEffect(() => {
         if (startDate && !endDate) {
@@ -216,6 +225,9 @@ const Logs = () => {
         // Save the PDF with the current date in the file name
         doc.save(`logs_${formattedDate}.pdf`);
     };
+    const handleStatusFilterChange = (event) => {
+        setSelectedStatus(event.target.value);
+    };
 
     return (
         <div className="main logs">
@@ -247,6 +259,21 @@ const Logs = () => {
                         dateFormat="MM/dd/yyyy"
                         className="endDate"
                     />
+                    {/* Status filter */}
+                    <h3>Status Filter</h3>
+                    <select
+                        className="status-dropdown"
+                        value={selectedStatus}
+                        onChange={handleStatusFilterChange}
+                    >
+                        <option value="">All Statuses</option>
+                        {/* Add options for available statuses based on your data */}
+                        <option value="Present">Present</option>
+                        <option value="Absent">Absent</option>
+                        <option value="Undertime">Undertime</option>
+                        <option value="Overtime">Overtime</option>
+                        {/* Add more options as needed */}
+                    </select>
                 </div>
 
                 <table className="logs__table">

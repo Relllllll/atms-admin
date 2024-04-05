@@ -114,14 +114,14 @@
     border-width: 0.2rem;
     border-radius: 0.5rem;
     background-color: var(--clr-light);
-    width: 60%;
+    width: 100%;
 }
 .endDate {
     border-color: var(--clr-primary);
     border-width: 0.2rem;
     border-radius: 0.5rem;
     background-color: var(--clr-light);
-    width: 60%;
+    width: 100%;
 }
 .date-picker {
     display: flex;
@@ -131,7 +131,10 @@
 
 /* Customize the appearance of the individual date picker inputs */
 .react-datepicker__input-container {
-    margin: 0 0.5rem; /* Adjust margin as needed */
+    width: 100%; /* Adjust margin as needed */
+}
+.react-datepicker-wrapper {
+    width: 6em;
 }
 
 /* Customize the appearance of the selected date */
@@ -220,4 +223,11 @@
 
 .ellipsis {
     margin-top: auto;
+}
+.status-dropdown {
+    border-color: var(--clr-primary);
+    border-width: 0.2rem;
+    border-radius: 0.5rem;
+    background-color: var(--clr-light);
+    width: 20%;
 }
