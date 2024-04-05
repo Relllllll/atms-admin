@@ -223,58 +223,48 @@ const EmployeeDetails = () => {
         // Set the font size (adjust as needed)
         doc.setFontSize(12); // You might need to adjust this based on content length
 
-        // Add employee name to the PDF
-        doc.text(
-            `Employee Name: ${employeeData.firstName} ${
-                employeeData.middleName || ""
-            } ${employeeData.lastName}`,
-            10,
-            10
-        );
+        // Add user's profile information to the PDF
+        if (employeeData) {
+            doc.text(
+                `Employee Name: ${employeeData.firstName} ${
+                    employeeData.middleName || ""
+                } ${employeeData.lastName}`,
+                10,
+                10
+            );
 
-        // Generate table data
-        const tableData = attendanceLogs.map((log, index) => {
-            return [
-                index + 1,
-                ...[
-                    formatDate(log.date),
-                    log.status,
-                    log.timeIn
-                        ? new Date(log.timeIn).toLocaleTimeString()
-                        : "-----",
-                    log.timeOut
-                        ? new Date(log.timeOut).toLocaleTimeString()
-                        : "-----",
-                ],
-            ];
-        });
+            // Add a line break
+            doc.text("", 10, 20);
+        }
 
-        let startY = 20; // Initial y position for the table
-        const pageHeight = doc.internal.pageSize.height; // Get page height
+        // Add attendance logs to the PDF
+        if (attendanceLogs.length > 0) {
+            // Define table header
+            const header = ["Date", "Time In", "Time Out", "Status"];
 
-        // Loop through table data and add it to the PDF page by page
-        tableData.forEach((rowData, index) => {
-            if (startY + 10 > pageHeight) {
-                // Check if the current table row will exceed the page height
-                doc.addPage(); // If yes, add a new page
-                startY = 20; // Reset startY for the new page
-            }
+            // Generate table data
+            const tableData = attendanceLogs.map((log) => [
+                log.date,
+                log.timeIn || "-",
+                log.timeOut || "-",
+                log.status,
+            ]);
+
+            // Add table to the PDF
             doc.autoTable({
-                startY: startY,
                 head: [header],
-                body: [rowData],
+                body: tableData,
                 theme: "grid",
                 styles: { fontSize: 12 },
-                columnStyles: { 0: { columnWidth: 10 } },
+                startY: 30, // Start the table below the profile information
             });
-            startY += 10; // Increment startY for the next table row
-        });
+        }
 
         // Trigger the download of the PDF
         doc.save(
             `${employeeData.firstName} ${employeeData.middleName || ""} ${
                 employeeData.lastName
-            }.pdf`
+            }_attendance_logs.pdf`
         );
     };
 
