@@ -100,7 +100,7 @@
 }
 
 .download-button:hover {
-    background-color: #0056b3;
+    filter: brightness(75%);
 }
 
 .logs__date-picker {

@@ -255,7 +255,7 @@ const EmployeeDetails = () => {
                 head: [header],
                 body: tableData,
                 theme: "grid",
-                styles: { fontSize: 12 },
+                styles: { fontSize: 12, fontStyle: "bold" },
                 startY: 30, // Start the table below the profile information
             });
         }
