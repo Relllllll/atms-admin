@@ -23,6 +23,7 @@ const EmployeeDetails = () => {
     const [userId, setUserId] = useState(null);
     const [editMode, setEditMode] = useState(false);
     const [addMode, setAddMode] = useState(false);
+    const [showConfirmation, setShowConfirmation] = useState(false);
     const [selectedDate, setSelectedDate] = useState(""); // State to store the selected date
     const [timeIn, setTimeIn] = useState("");
     const [timeOut, setTimeOut] = useState("");
@@ -274,6 +275,10 @@ const EmployeeDetails = () => {
     const currentLogs = attendanceLogs.slice(indexOfFirstLog, indexOfLastLog);
 
     const handleArchiveEmployee = () => {
+        setShowConfirmation(true);
+    };
+
+    const archiveEmployee = () => {
         if (!userId) return;
 
         try {
@@ -321,7 +326,39 @@ const EmployeeDetails = () => {
         } catch (error) {
             console.error("Error archiving employee:", error);
         }
+        setShowConfirmation(false);
         navigate("/employee-list");
+    };
+
+    const ConfirmationModal = () => {
+        return (
+            <div className="confirmation-modal">
+                <div className="confirmation-wrapper">
+                    <p className="confirmation-wrapper-title">
+                        Are you sure you want to archive this employee?
+                    </p>
+                    <div className="confirmation-button-wrapper">
+                        <button
+                            className="button-cancel"
+                            onClick={() => setShowConfirmation(false)}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            className="button-confirm"
+                            onClick={handleConfirmArchive}
+                        >
+                            Confirm
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
+    const handleConfirmArchive = () => {
+        archiveEmployee();
+        setShowConfirmation(false);
     };
 
     return (
@@ -694,6 +731,7 @@ const EmployeeDetails = () => {
                     </div>
                 </div>
             )}
+            {showConfirmation && <ConfirmationModal />}
         </div>
     );
 };

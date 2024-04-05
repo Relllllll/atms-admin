@@ -87,20 +87,26 @@
     background-color: var(--clr-light-gray);
 }
 
-.Present {
+.present {
     color: var(--clr-green);
     background-color: var(--clr-light-green);
 }
 
 .late,
-.Absent {
+.absent {
     color: var(--clr-red);
     background-color: var(--clr-light-red);
 }
 
-.Present,
-.Late,
-.Absent {
+.overtime,
+.undertime {
+    background-color: #19191915;
+}
+
+.present,
+.overtime,
+.undertime,
+.absent {
     padding: 0.8rem;
     border-radius: 1rem;
 }

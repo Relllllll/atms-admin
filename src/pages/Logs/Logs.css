@@ -107,26 +107,26 @@
     color: var(--clr-dark-blue);
     padding-top: 1rem;
     display: flex;
-    justify-content: center;
+    gap: 4rem;
 }
 .startDate {
     border-color: var(--clr-primary);
     border-width: 0.2rem;
     border-radius: 0.5rem;
     background-color: var(--clr-light);
-    width: 58.5vh;
+    width: 60%;
 }
 .endDate {
     border-color: var(--clr-primary);
     border-width: 0.2rem;
     border-radius: 0.5rem;
     background-color: var(--clr-light);
-    width: 58.5vh;
+    width: 60%;
 }
 .date-picker {
     display: flex;
     justify-content: center;
-    margin: 1rem; /* Adjust margin as needed */
+    margin: 1rem;
 }
 
 /* Customize the appearance of the individual date picker inputs */
@@ -192,9 +192,9 @@
     font-weight: 700;
 }
 
-.download-button:hover {
+/* .download-button:hover {
     background-color: #0056b3;
-}
+} */
 .pagination {
     padding-top: 1rem;
     justify-content: center;
