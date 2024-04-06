@@ -292,10 +292,8 @@ const EmployeeDetails = () => {
                     const employeeData = snapshot.val();
 
                     if (employeeData) {
-                        // Move employee data to archivedData collection
-                        set(archivedDataRef, {
-                            [userId]: employeeData,
-                        })
+                        // Append employee data to archivedData collection
+                        push(archivedDataRef, employeeData)
                             .then(() => {
                                 // Remove employee data from current location
                                 remove(employeeRef)
