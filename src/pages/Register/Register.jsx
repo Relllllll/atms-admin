@@ -79,47 +79,56 @@ const Register = () => {
             const { data } = await worker.recognize(selectedID);
 
             setTextResult(data.text);
-            const lines = data.text
-                .split("\n")
-                .map((line) => line.replace(/[^a-zA-Z\s]/g, ""));
+            const lines = data.text.split("\n");
             const filteredLines = lines.filter((line) => line.trim() !== ""); // Remove empty lines
-            setExtractedLines(filteredLines);
             console.log("Extracted Lines:", filteredLines);
             await worker.terminate();
 
-            // adjustable
-            if (filteredLines.length > 0) {
-                // Splitting the filtered line into four parts
-                let parts = filteredLines[6].split(" ");
+            // Custom logic to find and extract the ID number
+            const idNumberPattern = /(\d{4}-\d{6})/;
 
-                // Checking if there are at least four parts
-                if (parts.length >= 4) {
-                    // Assuming you want to assign each part to a different variable
-                    let part1 = parts[0];
-                    let part2 = parts[1];
-                    let part3 = parts[2];
-                    let part4 = parts[3];
-                    // Now you can use these parts as required
-                    console.log("Part 1:", part1);
-                    console.log("Part 2:", part2);
-                    console.log("Part 3:", part3);
-                    console.log("Part 4:", part4);
+            let idNumber;
+            for (let i = 0; i < filteredLines.length; i++) {
+                const line = filteredLines[i];
+                const match = idNumberPattern.exec(line);
+                if (match) {
+                    idNumber = match[0]; // Extracted ID number
+                    console.log("ID Number Match:", match);
+                    console.log("ID Number:", idNumber);
 
-                    // Set form data here
+                    // Assuming the name is located directly above the ID number
+                    const nameIndex = i - 1;
+                    const nameLine = filteredLines[nameIndex];
+                    console.log("Name Line:", nameLine);
+
+                    // Filter special characters from the name
+                    const filteredName = nameLine.replace(
+                        /[^a-zA-Z0-9,. ]/g,
+                        ""
+                    );
+                    console.log("Filtered Name:", filteredName);
+
+                    // Splitting the name into last name, first name, and middle name
+                    const [lastName, ...rest] = filteredName.split(",");
+                    const firstNameParts = rest.join(",").trim().split(/\s+/);
+                    const middleName = firstNameParts.pop().replace(".", ""); // Remove period from the last part
+                    const firstName = firstNameParts.join(" "); // Concatenate remaining parts as first name
+                    console.log("First Name:", firstName);
+                    console.log("Middle Name:", middleName);
+                    console.log("Last Name:", lastName);
+
+                    // Update form data with extracted ID number and name
                     setFormData({
                         ...formData,
-                        lastName: part1,
-                        firstName: `${part2} ${part3}`,
-                        middleName: part4,
-                        // Assuming you wanted to set lastName twice, adjust as needed
+                        idNumber: idNumber,
+                        firstName: firstName,
+                        middleName: middleName,
+                        lastName: lastName.trim(),
                     });
-                } else {
-                    console.log(
-                        "Filtered line doesn't have enough parts to split into four."
-                    );
+
+                    break;
                 }
             }
-            await worker.terminate();
         };
 
         convertImageToText();
