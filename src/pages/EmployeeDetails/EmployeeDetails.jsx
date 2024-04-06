@@ -177,6 +177,11 @@ const EmployeeDetails = () => {
     };
 
     const handleAddAttendance = async () => {
+        const clickTime = new Date().toISOString();
+        const database = getDatabase();
+        const logsRef = ref(database, "logs");
+        const logMessage = `Add Manual Attendance Confirm for employee ${employeeName} `;
+        push(logsRef, { action: logMessage, time: clickTime });
         if (!selectedDate || !timeIn) {
             // If required fields are missing, return
             return;
@@ -206,7 +211,7 @@ const EmployeeDetails = () => {
         const clickTime = new Date().toISOString();
         const database = getDatabase();
         const logsRef = ref(database, "logs");
-        const logMessage = `Employee ${employeeName} edit employee details`;
+        const logMessage = `Click edit employee details for  Employee ${employeeName} `;
         push(logsRef, { action: logMessage, time: clickTime });
         setEditMode(true);
     };
@@ -214,7 +219,7 @@ const EmployeeDetails = () => {
         const clickTime = new Date().toISOString();
         const database = getDatabase();
         const logsRef = ref(database, "logs");
-        const logMessage = `Employee ${employeeName}, admin add manual time`;
+        const logMessage = `Clicked add manual time for employee ${employeeName}`;
         push(logsRef, { action: logMessage, time: clickTime });
         setAddMode(true);
     };
@@ -354,7 +359,12 @@ const EmployeeDetails = () => {
         );
     };
 
-    const handleConfirmArchive = () => {
+    const handleConfirmArchive = (employeeName) => {
+        const clickTime = new Date().toISOString();
+        const database = getDatabase();
+        const logsRef = ref(database, "logs");
+        const logMessage = `Archive Employee an employee  `;
+        push(logsRef, { action: logMessage, time: clickTime });
         archiveEmployee();
         setShowConfirmation(false);
     };
