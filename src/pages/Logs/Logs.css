@@ -107,7 +107,7 @@
     color: var(--clr-dark-blue);
     padding-top: 1rem;
     display: flex;
-    gap: 4rem;
+    gap: 3rem;
 }
 .startDate {
     border-color: var(--clr-primary);
@@ -230,4 +230,16 @@
     border-radius: 0.5rem;
     background-color: var(--clr-light);
     width: 20%;
+}
+
+.reset-button {
+    padding: 0.25rem 1rem;
+    font-weight: bold;
+    border-radius: 1rem;
+    background-color: var(--clr-primary);
+    transition: filter 0.3s;
+}
+
+.reset-button:hover {
+    filter: brightness(75%);
 }

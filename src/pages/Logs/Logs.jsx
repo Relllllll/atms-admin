@@ -229,6 +229,11 @@ const Logs = () => {
         setSelectedStatus(event.target.value);
     };
 
+    const handleResetDateFilter = () => {
+        setStartDate(null);
+        setEndDate(null);
+    };
+
     return (
         <div className="main logs">
             <hr className="logs__hr" />
@@ -259,6 +264,13 @@ const Logs = () => {
                         dateFormat="MM/dd/yyyy"
                         className="endDate"
                     />
+
+                    <button
+                        className="reset-button"
+                        onClick={handleResetDateFilter}
+                    >
+                        Clear Dates
+                    </button>
                     {/* Status filter */}
                     <h3>Status Filter</h3>
                     <select
