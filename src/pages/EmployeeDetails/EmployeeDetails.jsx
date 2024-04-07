@@ -177,11 +177,7 @@ const EmployeeDetails = () => {
     };
 
     const handleAddAttendance = async () => {
-        const clickTime = new Date().toISOString();
-        const database = getDatabase();
-        const logsRef = ref(database, "logs");
-        const logMessage = `Add Manual Attendance Confirm for employee ${employeeName} `;
-        push(logsRef, { action: logMessage, time: clickTime });
+        
         if (!selectedDate || !timeIn) {
             // If required fields are missing, return
             return;
