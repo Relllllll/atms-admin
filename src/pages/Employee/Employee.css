@@ -98,14 +98,7 @@
     background-color: var(--clr-light-red);
 }
 
-.overtime,
-.undertime {
-    background-color: #19191915;
-}
-
 .present,
-.overtime,
-.undertime,
 .absent {
     padding: 0.8rem;
     border-radius: 1rem;

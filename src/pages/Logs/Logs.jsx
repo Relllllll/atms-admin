@@ -282,8 +282,6 @@ const Logs = () => {
                         {/* Add options for available statuses based on your data */}
                         <option value="Present">Present</option>
                         <option value="Absent">Absent</option>
-                        <option value="Undertime">Undertime</option>
-                        <option value="Overtime">Overtime</option>
                         {/* Add more options as needed */}
                     </select>
                 </div>

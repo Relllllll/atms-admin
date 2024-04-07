@@ -118,6 +118,7 @@ const Ticket = () => {
                         <tr>
                             <th>No.</th>
                             <th>Date</th>
+                            <th>Time</th>
                             <th>Id Number</th>
                             <th>Message</th>
                             <th>Status</th>
@@ -135,6 +136,11 @@ const Ticket = () => {
                                     {new Date(
                                         message.timestamp
                                     ).toLocaleDateString()}
+                                </td>
+                                <td>
+                                    {new Date(
+                                        message.timestamp
+                                    ).toLocaleTimeString()}
                                 </td>
                                 <td>{message.name}</td>
                                 <td>{message.message}</td>

@@ -193,11 +193,6 @@
     border-left: 0.7rem solid var(--clr-red);
 }
 
-.employeeDetails__logs-box-overtime,
-.employeeDetails__logs-box-undertime {
-    border-left: 0.7rem solid #191919;
-}
-
 .employeeDetails__logs-top {
     display: flex;
     align-items: center;
@@ -227,12 +222,6 @@
 .employeeDetails__logs-status-late {
     background-color: var(--clr-light-red);
     color: var(--clr-red);
-}
-
-.employeeDetails__logs-status-overtime,
-.employeeDetails__logs-status-undertime {
-    background-color: #19191915;
-    color: #191919;
 }
 
 .employeeDetails__logs-status-bullet {
