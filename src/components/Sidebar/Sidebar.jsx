@@ -141,6 +141,28 @@ const Sidebar = () => {
 
                     <p className="sidebar__menu-item">Activity Logs</p>
                 </Link>
+                <Link
+                    to="https://atms-employee.vercel.app/"
+                    target="_blank"
+                    className="sidebar__menu-link"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        className="sidebar__menu-icon"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M13.5 10.5v2a1 1 0 0 1-1 1h-2m0-13h2a1 1 0 0 1 1 1v2m-13 0v-2a1 1 0 0 1 1-1h2m0 13h-2a1 1 0 0 1-1-1v-2m6.5-6V8H5.5m-1 2a3.63 3.63 0 0 0 5 0M4 4.75a.25.25 0 0 1 0-.5m0 .5a.25.25 0 0 0 0-.5m6 .5a.25.25 0 0 1 0-.5m0 .5a.25.25 0 1 0 0-.5"
+                        />
+                    </svg>
+
+                    <p className="sidebar__menu-item">Employee Attendance</p>
+                </Link>
             </div>
 
             <div className="sidebar__menu-container">

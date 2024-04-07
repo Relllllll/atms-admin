@@ -85,7 +85,7 @@
 }
 
 .login__background-image-container {
-    flex: 1.0;
+    flex: 1;
 }
 
 .login__background-image {
@@ -182,4 +182,25 @@
     justify-content: center;
     align-items: center;
     z-index: 999;
+}
+.redirect__tittle {
+    margin-top: 0.5rem;
+    display: flex;
+    justify-content: center;
+    background-color: #f7b137;
+    border: 1px;
+    border-radius: 1rem;
+    padding: 0.5rem;
+    width: auto;
+    gap: 1rem;
+    color: var(--clr-dark-blue);
+    font-weight: 600;
+}
+.redirect__employee {
+    display: flex;
+    justify-content: right;
+}
+.redirect__tittle:hover {
+    filter: brightness(75%);
+    transition: filter 0.3s;
 }
