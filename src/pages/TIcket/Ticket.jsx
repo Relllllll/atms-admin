@@ -111,8 +111,7 @@ const Ticket = () => {
             <hr className="ticket__hr" />
             <div className="ticket__list-container">
                 <h1 className="ticket__tittle">
-                    Tickets{" "}
-                    {unreadMessages && <span className="red-dot"></span>}
+                    Report {unreadMessages && <span className="red-dot"></span>}
                 </h1>
                 <table className="ticket__table">
                     <thead className="ticket__table-header">
