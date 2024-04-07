@@ -359,7 +359,7 @@ const EmployeeDetails = () => {
         );
     };
 
-    const handleConfirmArchive = (employeeName) => {
+    const handleConfirmArchive = () => {
         const clickTime = new Date().toISOString();
         const database = getDatabase();
         const logsRef = ref(database, "logs");
