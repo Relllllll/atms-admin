@@ -184,17 +184,18 @@
     z-index: 999;
 }
 .redirect__tittle {
-    margin-top: 0.5rem;
-    display: flex;
-    justify-content: center;
-    background-color: #f7b137;
-    border: 1px;
-    border-radius: 1rem;
+    position: fixed;
+    top: 0.1rem;
+    right: 0.1rem;
     padding: 0.5rem;
-    width: auto;
-    gap: 1rem;
+
     color: var(--clr-dark-blue);
+    border: none;
+    border-radius: 2rem;
+    cursor: pointer;
+    width: auto;
     font-weight: 600;
+    background-color: #f7b137;
 }
 .redirect__employee {
     display: flex;
