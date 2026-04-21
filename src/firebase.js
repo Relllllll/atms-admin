@@ -21,8 +21,10 @@ import { getAnalytics } from "firebase/analytics";
 //     measurementId: "G-428RXE7SQ9",
 // };
 const firebaseConfig = {
+
   apiKey: "AIzaSyAAV4rGL7pa4xcu8qN7F7-HgA546JnvPe4",
   authDomain: "atms-projct.firebaseapp.com",
+  databaseURL: "https://atms-projct-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "atms-projct",
   storageBucket: "atms-projct.firebasestorage.app",
   messagingSenderId: "536849326258",
